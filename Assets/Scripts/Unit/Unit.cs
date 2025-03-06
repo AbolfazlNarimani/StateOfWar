@@ -1,5 +1,6 @@
 using System;
 using NewInputSystem;
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,13 +11,17 @@ namespace Unit
         private const string IS_MOVING = "IsMoving";
         private Vector3 _targetPosition;
         private float _stoppingDistance;
+        private GameInput _gameInput;
         [FormerlySerializedAs("_animation")] [SerializeField] private Animator _animator;
    
 
         private void Start()
         {
-            GameInput.Instance.OnMoveAction += OnMoveAction;
+            _gameInput = GameInput.Instance;
+            _gameInput.OnMoveAction += OnMoveAction;
         }
+
+        
 
         private void OnMoveAction(object sender, EventArgs e)
         {
