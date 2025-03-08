@@ -12,14 +12,13 @@ namespace NewInputSystem
         [SerializeField] private float rotationSpeed = 10f;
         private float _rotationInput;
         private float _zoomInput;
-        private float _currentZoom; 
+        private float _currentZoom;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             _gameInput = GameInput.Instance;
             _currentZoom = _defaultZoom;
-            SetFollowOffset(_defaultZoom);
         }
 
         // Update is called once per frame
@@ -27,7 +26,6 @@ namespace NewInputSystem
         {
             HandleMovement();
             HandleRotation();
-            HandleZoom();
         }
 
         private void HandleRotation()
@@ -35,42 +33,6 @@ namespace NewInputSystem
             _rotationInput = _gameInput.GetRotationVectorNormalized();
 
             transform.Rotate(Vector3.up, _rotationInput * rotationSpeed * Time.deltaTime);
-        }
-
-        public void SetFollowOffset(float offsetInput)
-        {
-            // Get the component that handles position adjustments
-            var bodyComponent = _cinemachineCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
-
-            if (bodyComponent != null)
-            {
-                // Assuming you are using the Transposer body (or similar)
-                var follow = bodyComponent as CinemachineFollow;
-                if (follow != null)
-                {
-                    _currentZoom += offsetInput;
-
-                    _currentZoom = Mathf.Clamp(_currentZoom, 3f, 10f);
-
-                    follow.FollowOffset = new Vector3(0F, _currentZoom, 0F); // Set the offset value
-                    Debug.Log("Follow offset set to: " + _currentZoom);
-                }
-                else
-                {
-                    Debug.LogError("Body component is not a CinemachineTransposer!");
-                }
-            }
-            else
-            {
-                Debug.LogError("CinemachineBody component not found.");
-            }
-        }
-
-
-        private void HandleZoom()
-        {
-            _zoomInput = _gameInput.GetZoomVectorNormalized();
-            SetFollowOffset(_zoomInput);
         }
 
 

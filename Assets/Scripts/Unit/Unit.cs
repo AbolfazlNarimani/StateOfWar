@@ -11,24 +11,14 @@ namespace Unit
         private const string IS_MOVING = "IsMoving";
         private Vector3 _targetPosition;
         private float _stoppingDistance;
-        private GameInput _gameInput;
+
+        private void Awake()
+        {
+            _targetPosition = transform.position;
+        }
+
         [FormerlySerializedAs("_animation")] [SerializeField] private Animator _animator;
-   
-
-        private void Start()
-        {
-            _gameInput = GameInput.Instance;
-            _gameInput.OnMoveAction += OnMoveAction;
-        }
-
         
-
-        private void OnMoveAction(object sender, EventArgs e)
-        {
-            MoveUnit(MouseWorld.GetMouseWorldPosition());
-        
-        }
-
         void Update()
         {
             float moveSpeed = 4f;
@@ -48,7 +38,7 @@ namespace Unit
             }
         }
 
-        private void MoveUnit(Vector3 targetPosition)
+        public void MoveUnit(Vector3 targetPosition)
         {
             _targetPosition = targetPosition;
         }

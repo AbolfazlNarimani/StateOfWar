@@ -116,12 +116,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""CameraZoom"",
+                    ""name"": ""SelectUnit"",
                     ""type"": ""Button"",
-                    ""id"": ""8aaebdfc-b0b4-4585-b8e0-e0d57cc31fbb"",
+                    ""id"": ""3a84f81a-0eda-4214-ac7d-298442db8c55"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -229,37 +229,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""2465433b-b877-4db4-b540-fdb757206051"",
-                    ""path"": ""1DAxis"",
+                    ""name"": """",
+                    ""id"": ""bd53fcaf-194a-4e52-b842-51e369bc9d0d"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""CameraZoom"",
-                    ""isComposite"": true,
+                    ""action"": ""SelectUnit"",
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""47f36407-b707-4b10-94e5-dbae9dfbf19a"",
-                    ""path"": ""<Mouse>/scroll/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CameraZoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""cfed79ed-1672-4295-80c7-7e0a0dd9ccb6"",
-                    ""path"": ""<Mouse>/scroll/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CameraZoom"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -848,7 +826,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_CameraMovement = m_Player.FindAction("CameraMovement", throwIfNotFound: true);
         m_Player_CameraRotation = m_Player.FindAction("CameraRotation", throwIfNotFound: true);
-        m_Player_CameraZoom = m_Player.FindAction("CameraZoom", throwIfNotFound: true);
+        m_Player_SelectUnit = m_Player.FindAction("SelectUnit", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -945,7 +923,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_CameraMovement;
     private readonly InputAction m_Player_CameraRotation;
-    private readonly InputAction m_Player_CameraZoom;
+    private readonly InputAction m_Player_SelectUnit;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -970,9 +948,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @CameraRotation => m_Wrapper.m_Player_CameraRotation;
         /// <summary>
-        /// Provides access to the underlying input action "Player/CameraZoom".
+        /// Provides access to the underlying input action "Player/SelectUnit".
         /// </summary>
-        public InputAction @CameraZoom => m_Wrapper.m_Player_CameraZoom;
+        public InputAction @SelectUnit => m_Wrapper.m_Player_SelectUnit;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1008,9 +986,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CameraRotation.started += instance.OnCameraRotation;
             @CameraRotation.performed += instance.OnCameraRotation;
             @CameraRotation.canceled += instance.OnCameraRotation;
-            @CameraZoom.started += instance.OnCameraZoom;
-            @CameraZoom.performed += instance.OnCameraZoom;
-            @CameraZoom.canceled += instance.OnCameraZoom;
+            @SelectUnit.started += instance.OnSelectUnit;
+            @SelectUnit.performed += instance.OnSelectUnit;
+            @SelectUnit.canceled += instance.OnSelectUnit;
         }
 
         /// <summary>
@@ -1031,9 +1009,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @CameraRotation.started -= instance.OnCameraRotation;
             @CameraRotation.performed -= instance.OnCameraRotation;
             @CameraRotation.canceled -= instance.OnCameraRotation;
-            @CameraZoom.started -= instance.OnCameraZoom;
-            @CameraZoom.performed -= instance.OnCameraZoom;
-            @CameraZoom.canceled -= instance.OnCameraZoom;
+            @SelectUnit.started -= instance.OnSelectUnit;
+            @SelectUnit.performed -= instance.OnSelectUnit;
+            @SelectUnit.canceled -= instance.OnSelectUnit;
         }
 
         /// <summary>
@@ -1356,12 +1334,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCameraRotation(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "CameraZoom" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "SelectUnit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCameraZoom(InputAction.CallbackContext context);
+        void OnSelectUnit(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

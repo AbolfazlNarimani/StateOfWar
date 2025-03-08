@@ -7,8 +7,9 @@ namespace NewInputSystem
     public class GameInput : MonoBehaviour
     {
         public event EventHandler OnMoveAction;
-        
-  
+        public event EventHandler OnUnitSelect;
+
+
         public static GameInput Instance { get; private set; }
         private PlayerInputActions _playerInputActions;
 
@@ -19,7 +20,12 @@ namespace NewInputSystem
             _playerInputActions.Player.Enable();
 
             _playerInputActions.Player.Move.performed += MoveOnPerformed;
-            
+            _playerInputActions.Player.SelectUnit.performed += SelectUnitPerformed;
+        }
+
+        private void SelectUnitPerformed(InputAction.CallbackContext obj)
+        {
+            OnUnitSelect?.Invoke(this, EventArgs.Empty);
         }
 
         public float GetRotationVectorNormalized()
@@ -28,10 +34,6 @@ namespace NewInputSystem
             return rotationVector;
         }
 
-        public float GetZoomVectorNormalized()
-        {
-            return _playerInputActions.Player.CameraZoom.ReadValue<float>();
-        }
 
         public Vector2 GetMovementVectorNormalized()
         {
