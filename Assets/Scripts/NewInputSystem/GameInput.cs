@@ -34,6 +34,12 @@ namespace NewInputSystem
             return rotationVector;
         }
 
+        public float GetZoomVectorNormalized()
+        {
+            float zoomVector = _playerInputActions.Player.CameraZoom.ReadValue<float>();
+            return zoomVector;
+        }
+
 
         public Vector3 GetMovementVectorNormalized()
         {

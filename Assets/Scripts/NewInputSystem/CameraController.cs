@@ -1,4 +1,5 @@
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NewInputSystem
@@ -10,10 +11,15 @@ namespace NewInputSystem
         [SerializeField] private float moveSpeed = 7f;
         private readonly float _defaultZoom = 7;
         [SerializeField] private float rotationSpeed = 10f;
+        [SerializeField] private float defaultZRotation = 35f;
         private float _rotationInput;
         private float _zoomInput;
-        private float _currentZoom;
-        private float rotationValue;
+        private float _rotationValue;
+
+        private float _currentZoom = 10f;
+        private float zoomSpeed = 5f;
+        private float minZoom = 3f;
+        private float maxZoom = 7f;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -27,15 +33,45 @@ namespace NewInputSystem
         {
             HandleMovement();
             HandleRotation();
+            HandleZoom();
+        }
+
+        private void HandleZoom()
+        {
+            // Get the Cinemachine Virtual Camera
+            var cinemachineComponent = _cinemachineCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+            var framingTransposer = cinemachineComponent.GetComponent<CinemachineFollow>();
+
+
+            // Get zoom input from mouse scroll
+            _zoomInput = _gameInput.GetZoomVectorNormalized();
+            
+
+            // Adjust zoom smoothly
+            _currentZoom += _zoomInput * Time.deltaTime * zoomSpeed;
+
+            // Clamp zoom to prevent extreme values
+            _currentZoom = Mathf.Clamp(_currentZoom, minZoom, maxZoom);
+
+            // Apply zoom to Follow Offset
+            if (_currentZoom <= maxZoom && _currentZoom >= minZoom)
+            {
+                Vector3 offset = framingTransposer.FollowOffset;
+                offset.y = _currentZoom;
+                framingTransposer.FollowOffset = offset;
+                
+                    AdjustObjectZOffset();
+                
+            }
         }
 
         private void HandleRotation()
         {
             _rotationInput = _gameInput.GetRotationVectorNormalized();
 
-            rotationValue += _rotationInput * rotationSpeed * Time.deltaTime;
-            
-            transform.eulerAngles = new Vector3(35F, rotationValue * rotationSpeed, 0F);
+            _rotationValue += _rotationInput * rotationSpeed * Time.deltaTime;
+
+            transform.eulerAngles = new Vector3(defaultZRotation, _rotationValue * rotationSpeed, 0F);
         }
 
 
@@ -57,6 +93,18 @@ namespace NewInputSystem
 
             // Apply movement
             transform.position += moveDir * moveDistance;
+        }
+
+        private void AdjustObjectZOffset()
+        {
+            // Define how much the Z position should change
+            float minZOffset = 13f; // Closest position
+            float maxZOffset = 35f; // Default position
+
+            // Interpolate Z offset based on zoom level
+            
+            float zOffset = Mathf.Lerp(minZOffset, maxZOffset, (_currentZoom - minZoom) / (maxZoom - minZoom));
+            defaultZRotation = zOffset;
         }
     }
 }
