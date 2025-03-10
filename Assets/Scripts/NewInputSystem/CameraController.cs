@@ -17,9 +17,9 @@ namespace NewInputSystem
         private float _rotationValue;
 
         private float _currentZoom = 10f;
-        private float zoomSpeed = 5f;
-        private float minZoom = 3f;
-        private float maxZoom = 7f;
+        private const float ZoomSpeed = 5f;
+        private const float MinZoom = 3f;
+        private const float MaxZoom = 7f;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -48,13 +48,13 @@ namespace NewInputSystem
             
 
             // Adjust zoom smoothly
-            _currentZoom += _zoomInput * Time.deltaTime * zoomSpeed;
+            _currentZoom += _zoomInput * Time.deltaTime * ZoomSpeed;
 
             // Clamp zoom to prevent extreme values
-            _currentZoom = Mathf.Clamp(_currentZoom, minZoom, maxZoom);
+            _currentZoom = Mathf.Clamp(_currentZoom, MinZoom, MaxZoom);
 
             // Apply zoom to Follow Offset
-            if (_currentZoom <= maxZoom && _currentZoom >= minZoom)
+            if (_currentZoom <= MaxZoom && _currentZoom >= MinZoom)
             {
                 Vector3 offset = framingTransposer.FollowOffset;
                 offset.y = _currentZoom;
@@ -103,7 +103,7 @@ namespace NewInputSystem
 
             // Interpolate Z offset based on zoom level
             
-            float zOffset = Mathf.Lerp(minZOffset, maxZOffset, (_currentZoom - minZoom) / (maxZoom - minZoom));
+            float zOffset = Mathf.Lerp(minZOffset, maxZOffset, (_currentZoom - MinZoom) / (MaxZoom - MinZoom));
             defaultZRotation = zOffset;
         }
     }
