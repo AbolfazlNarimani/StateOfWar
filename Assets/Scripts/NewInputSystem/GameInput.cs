@@ -35,7 +35,7 @@ namespace NewInputSystem
         }
 
 
-        public Vector2 GetMovementVectorNormalized()
+        public Vector3 GetMovementVectorNormalized()
         {
             Vector2 inputVector = _playerInputActions.Player.CameraMovement.ReadValue<Vector2>();
 

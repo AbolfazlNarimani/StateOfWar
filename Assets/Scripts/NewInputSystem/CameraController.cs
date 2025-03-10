@@ -8,11 +8,12 @@ namespace NewInputSystem
         [SerializeField] CinemachineCamera _cinemachineCamera;
         private GameInput _gameInput;
         [SerializeField] private float moveSpeed = 7f;
-        private float _defaultZoom = 7;
+        private readonly float _defaultZoom = 7;
         [SerializeField] private float rotationSpeed = 10f;
         private float _rotationInput;
         private float _zoomInput;
         private float _currentZoom;
+        private float rotationValue;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -32,69 +33,30 @@ namespace NewInputSystem
         {
             _rotationInput = _gameInput.GetRotationVectorNormalized();
 
-            transform.Rotate(Vector3.up, _rotationInput * rotationSpeed * Time.deltaTime);
+            rotationValue += _rotationInput * rotationSpeed * Time.deltaTime;
+            
+            transform.eulerAngles = new Vector3(35F, rotationValue * rotationSpeed, 0F);
         }
 
 
         private void HandleMovement()
         {
             Vector2 inputVector = _gameInput.GetMovementVectorNormalized();
-            Vector3 moveDir = new Vector3(inputVector.x, 0F, inputVector.y);
 
+            // Calculate movement direction relative to the character's rotation
+            Vector3 moveDir = transform.forward * inputVector.y + transform.right * inputVector.x;
 
-            // float playerSize = .2F;
-            var playerHight = .7F;
-            //float playerRadious = 1F;
-            var turningSpeed = 10f;
-            var moveDistance = moveSpeed * Time.deltaTime;
-            var position = transform.position;
-            //moveDir.x != 0 &&
-            // must inmplement logic for camera world border
-            var canMove = true;
+            // Flatten the direction to the XZ plane (ignore Y-axis)
+            moveDir.y = 0;
 
-            if (!canMove)
-            {
-                // Cannot move towards moveDir
-                // Attempt only x movement
-                Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-                var position1 = transform.position;
-                canMove = moveDir.x is < -0.5f or > +0.5F && !Physics.CapsuleCast(position1,
-                    (position1 + Vector3.up * playerHight),
-                    playerHight, moveDirX, moveDistance);
-                if (canMove)
-                {
-                    // only can move on X
-                    moveDir = moveDirX;
-                }
-                else
-                {
-                    // we Cannot move on the X
-                    // Attempt only z movement
-                    Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                    var position2 = transform.position;
-                    canMove = moveDir.z is < -0.5f or > +0.5F && !Physics.CapsuleCast(position2,
-                        (position2 + Vector3.up * playerHight),
-                        playerHight, moveDirZ, moveDistance);
-                    if (canMove)
-                    {
-                        // we only can move on z 
-                        moveDir = moveDirZ;
-                    }
-                    else
-                    {
-                        // we Cannot move in any direction
-                    }
-                }
-            }
+            // Normalize to prevent faster diagonal movement
+            if (moveDir.magnitude > 0)
+                moveDir.Normalize();
 
+            float moveDistance = moveSpeed * Time.deltaTime;
 
-            if (canMove)
-            {
-                transform.position += moveDir * (moveDistance);
-            }
-
-
-            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turningSpeed);
+            // Apply movement
+            transform.position += moveDir * moveDistance;
         }
     }
 }
