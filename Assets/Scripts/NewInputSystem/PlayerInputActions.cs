@@ -262,7 +262,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""negative"",
                     ""id"": ""5afdf429-84fe-469c-8173-3bbef08cd41b"",
-                    ""path"": ""<Keyboard>/pageDown"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -273,7 +273,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""positive"",
                     ""id"": ""6ccbb651-9be9-4f31-919b-45012b1b2a2a"",
-                    ""path"": ""<Keyboard>/pageUp"",
+                    ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
