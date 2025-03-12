@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.Design.Serialization;
 using NewInputSystem;
+using NewInputSystem.BaseActions;
 using UnityEngine;
 
 namespace Unit
@@ -30,7 +31,7 @@ namespace Unit
 
         private void OnMoveAction(object sender, EventArgs e)
         {
-            selectedUnit.MoveUnit(MouseWorld.GetMouseWorldPosition());
+            selectedUnit.GetMoveAction().MoveUnit(MouseWorld.GetMouseWorldPosition());
         }
 
         private void HandleUnitSelection()
