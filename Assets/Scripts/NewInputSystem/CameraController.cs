@@ -1,4 +1,5 @@
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NewInputSystem
@@ -8,11 +9,17 @@ namespace NewInputSystem
         [SerializeField] CinemachineCamera _cinemachineCamera;
         private GameInput _gameInput;
         [SerializeField] private float moveSpeed = 7f;
-        private float _defaultZoom = 7;
+        private readonly float _defaultZoom = 7;
         [SerializeField] private float rotationSpeed = 10f;
+        [SerializeField] private float defaultZRotation = 35f;
         private float _rotationInput;
         private float _zoomInput;
-        private float _currentZoom;
+        private float _rotationValue;
+
+        private float _currentZoom = 10f;
+        private const float ZoomSpeed = 5f;
+        private const float MinZoom = 3f;
+        private const float MaxZoom = 7f;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -26,75 +33,78 @@ namespace NewInputSystem
         {
             HandleMovement();
             HandleRotation();
+            HandleZoom();
+        }
+
+        private void HandleZoom()
+        {
+            // Get the Cinemachine Virtual Camera
+            var cinemachineComponent = _cinemachineCamera.GetCinemachineComponent(CinemachineCore.Stage.Body);
+            var framingTransposer = cinemachineComponent.GetComponent<CinemachineFollow>();
+
+
+            // Get zoom input from mouse scroll
+            _zoomInput = _gameInput.GetZoomVectorNormalized();
+            
+
+            // Adjust zoom smoothly
+            _currentZoom += _zoomInput * Time.deltaTime * ZoomSpeed;
+
+            // Clamp zoom to prevent extreme values
+            _currentZoom = Mathf.Clamp(_currentZoom, MinZoom, MaxZoom);
+
+            // Apply zoom to Follow Offset
+            if (_currentZoom <= MaxZoom && _currentZoom >= MinZoom)
+            {
+                Vector3 offset = framingTransposer.FollowOffset;
+                offset.y = _currentZoom;
+                framingTransposer.FollowOffset = offset;
+                
+                    AdjustObjectZOffset();
+                
+            }
         }
 
         private void HandleRotation()
         {
             _rotationInput = _gameInput.GetRotationVectorNormalized();
 
-            transform.Rotate(Vector3.up, _rotationInput * rotationSpeed * Time.deltaTime);
+            _rotationValue += _rotationInput * rotationSpeed * Time.deltaTime;
+
+            transform.eulerAngles = new Vector3(defaultZRotation, _rotationValue * rotationSpeed, 0F);
         }
 
 
         private void HandleMovement()
         {
             Vector2 inputVector = _gameInput.GetMovementVectorNormalized();
-            Vector3 moveDir = new Vector3(inputVector.x, 0F, inputVector.y);
 
+            // Calculate movement direction relative to the character's rotation
+            Vector3 moveDir = transform.forward * inputVector.y + transform.right * inputVector.x;
 
-            // float playerSize = .2F;
-            var playerHight = .7F;
-            //float playerRadious = 1F;
-            var turningSpeed = 10f;
-            var moveDistance = moveSpeed * Time.deltaTime;
-            var position = transform.position;
-            //moveDir.x != 0 &&
-            // must inmplement logic for camera world border
-            var canMove = true;
+            // Flatten the direction to the XZ plane (ignore Y-axis)
+            moveDir.y = 0;
 
-            if (!canMove)
-            {
-                // Cannot move towards moveDir
-                // Attempt only x movement
-                Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-                var position1 = transform.position;
-                canMove = moveDir.x is < -0.5f or > +0.5F && !Physics.CapsuleCast(position1,
-                    (position1 + Vector3.up * playerHight),
-                    playerHight, moveDirX, moveDistance);
-                if (canMove)
-                {
-                    // only can move on X
-                    moveDir = moveDirX;
-                }
-                else
-                {
-                    // we Cannot move on the X
-                    // Attempt only z movement
-                    Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
-                    var position2 = transform.position;
-                    canMove = moveDir.z is < -0.5f or > +0.5F && !Physics.CapsuleCast(position2,
-                        (position2 + Vector3.up * playerHight),
-                        playerHight, moveDirZ, moveDistance);
-                    if (canMove)
-                    {
-                        // we only can move on z 
-                        moveDir = moveDirZ;
-                    }
-                    else
-                    {
-                        // we Cannot move in any direction
-                    }
-                }
-            }
+            // Normalize to prevent faster diagonal movement
+            if (moveDir.magnitude > 0)
+                moveDir.Normalize();
 
+            float moveDistance = moveSpeed * Time.deltaTime;
 
-            if (canMove)
-            {
-                transform.position += moveDir * (moveDistance);
-            }
+            // Apply movement
+            transform.position += moveDir * moveDistance;
+        }
 
+        private void AdjustObjectZOffset()
+        {
+            // Define how much the Z position should change
+            float minZOffset = 13f; // Closest position
+            float maxZOffset = 35f; // Default position
 
-            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turningSpeed);
+            // Interpolate Z offset based on zoom level
+            
+            float zOffset = Mathf.Lerp(minZOffset, maxZOffset, (_currentZoom - MinZoom) / (MaxZoom - MinZoom));
+            defaultZRotation = zOffset;
         }
     }
 }
