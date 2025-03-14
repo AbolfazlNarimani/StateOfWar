@@ -42,29 +42,49 @@ namespace NewInputSystem.BaseActions
             }
         }
 
-        public void MoveUnit(Vector3 targetPosition)
+        public void MoveUnit(GridPosition targetPosition)
         {
-            _targetPosition = targetPosition;
+            _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
+        }
+
+        public bool IsValidActionGridPosition(GridPosition gridPosition)
+        {
+            List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
+            return validGridPositionList.Contains(gridPosition);
         }
 
         public List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();
-            
+
             GridPosition unitGridPosition = _unit.GetGridPosition();
 
-            for (int X = -maxMoveDistance ; X <= maxMoveDistance ; X++)
+            for (int X = -maxMoveDistance; X <= maxMoveDistance; X++)
             {
-                for (int Z = -maxMoveDistance; Z < maxMoveDistance; Z++)
+                for (int Z = -maxMoveDistance; Z <= maxMoveDistance; Z++)
                 {
-                    GridPosition offsetGridPosition = new GridPosition(X,Z);
+                    GridPosition offsetGridPosition = new GridPosition(X, Z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+                    if (!LevelGrid.Instance.IsGridPositionValid(testGridPosition))
+                    {
+                        continue;
+                    }
+
+                    if (unitGridPosition == testGridPosition)
+                    {
+                        // this is where unit is at
+                        continue;
+                    }
+
+                    if (LevelGrid.Instance.HasAnyUnitAtGridPosition(testGridPosition))
+                    {
+                        //grid position is occupied with another unit
+                        continue;
+                    }
+                    validActionGridPositions.Add(testGridPosition);
                 }
             }
-            
-            
-            
-            
+
             return validActionGridPositions;
         }
     }

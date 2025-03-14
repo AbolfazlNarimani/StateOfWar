@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Design.Serialization;
+using GridSystem;
 using NewInputSystem;
 using NewInputSystem.BaseActions;
 using UnityEngine;
@@ -31,7 +32,14 @@ namespace Unit
 
         private void OnMoveAction(object sender, EventArgs e)
         {
-            selectedUnit.GetMoveAction().MoveUnit(MouseWorld.GetMouseWorldPosition());
+            GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMouseWorldPosition());
+            
+            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
+            {
+                selectedUnit.GetMoveAction().MoveUnit(mouseGridPosition);
+            }
+
+          
         }
 
         private void HandleUnitSelection()
