@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.01, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5039947149763917611}
@@ -183,6 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMoveDistance: 4
+  actionIcon: {fileID: 173104812, guid: 05e0567213a58c840a3ea79a4409bdfd, type: 3}
   animator: {fileID: 5593374737744079297}
 --- !u!114 &4415815453278649907
 MonoBehaviour:
@@ -196,6 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95fadf2b26b787cc78b2522aa399dc9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actionIcon: {fileID: 1510120445, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
 --- !u!1001 &5534163054109334333
 PrefabInstance:
   m_ObjectHideFlags: 0

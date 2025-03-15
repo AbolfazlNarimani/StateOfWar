@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.Design.Serialization;
 using GridSystem;
 using NewInputSystem;
+using NewInputSystem.ActionSystem.BaseAction;
 using UnityEngine;
 
 namespace Unit
@@ -11,8 +12,10 @@ namespace Unit
         [SerializeField] private Unit selectedUnit;
         [SerializeField] private LayerMask unitLayerMask;
         private GameInput _gameInput;
+        private BaseAction _selectedAction;
 
         public event EventHandler OnSelectedUnitChanged;
+        public event EventHandler OnSelectedActionChanged;
 
         public static UnitActionSystem Instance { get; private set; }
 
@@ -24,21 +27,9 @@ namespace Unit
             _gameInput = GameInput.Instance;
             _gameInput.OnMoveAction += OnMoveAction;
             _gameInput.OnUnitSelect += OnUnitSelected;
+            SetSelectedUnit(selectedUnit);
         }
 
-        private void Update()
-        {
-            if (_isBusy)
-            {
-                return;
-            }
-
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                SetBusy();
-                selectedUnit.GetSpinAction().Spin(ClearBusy);
-            }
-        }
 
         private void OnUnitSelected(object sender, EventArgs e)
         {
@@ -47,12 +38,15 @@ namespace Unit
 
         private void OnMoveAction(object sender, EventArgs e)
         {
+            if (_isBusy) return;
+
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMouseWorldPosition());
 
-            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition)&& !_isBusy )
+
+            if (_selectedAction.IsValidActionGridPosition(mouseGridPosition) && !_isBusy)
             {
                 SetBusy();
-                selectedUnit.GetMoveAction().MoveUnit(mouseGridPosition,ClearBusy);
+                _selectedAction.TakeAction(mouseGridPosition, ClearBusy);
             }
         }
 
@@ -64,7 +58,10 @@ namespace Unit
                 // selectedUnit = hit.collider.GetComponent<Unit>();
                 if (hit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
-                    SetSelectedUnit(unit);
+                    if (selectedUnit != unit)
+                    {
+                        SetSelectedUnit(unit);
+                    }
                 }
             }
         }
@@ -72,6 +69,9 @@ namespace Unit
         private void SetSelectedUnit(Unit unit)
         {
             selectedUnit = unit;
+
+            SetSelectedAction(unit.GetMoveAction());
+
             OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -89,5 +89,13 @@ namespace Unit
         {
             return selectedUnit;
         }
+
+        public void SetSelectedAction(BaseAction baseAction)
+        {
+            _selectedAction = baseAction;
+            OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        public BaseAction GetSelectedAction() => _selectedAction;
     }
 }

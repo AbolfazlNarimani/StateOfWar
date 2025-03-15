@@ -12,8 +12,9 @@ namespace NewInputSystem.ActionSystem.MoveAction
         private const string ActionName = "Move";
         private Vector3 _targetPosition;
         private float _stoppingDistance;
+        [SerializeField] private Sprite actionIcon;
         [SerializeField] private Animator animator;
-        
+
         protected override void Awake()
         {
             base.Awake();
@@ -22,7 +23,13 @@ namespace NewInputSystem.ActionSystem.MoveAction
 
         public override string GetActionName()
         {
-            return ActionName; ;
+            return ActionName;
+            ;
+        }
+
+        public override Sprite GetActionIcon()
+        {
+            return actionIcon;
         }
 
 
@@ -32,7 +39,7 @@ namespace NewInputSystem.ActionSystem.MoveAction
             {
                 return;
             }
-            
+
             float moveSpeed = 4f;
             _stoppingDistance = .1f;
             Vector3 moveDirection = (_targetPosition - transform.position).normalized;
@@ -52,20 +59,15 @@ namespace NewInputSystem.ActionSystem.MoveAction
             transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
         }
 
-        public void MoveUnit(GridPosition targetPosition,Action onActionComplete)
+        // old moveUnit function
+        public override void TakeAction(GridPosition targetPosition, Action onActionComplete)
         {
             this.OnActionComplete = onActionComplete;
             _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
             IsActive = true;
         }
-
-        public bool IsValidActionGridPosition(GridPosition gridPosition)
-        {
-            List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
-            return validGridPositionList.Contains(gridPosition);
-        }
-
-        public List<GridPosition> GetValidActionGridPositionList()
+        
+        public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();
 
