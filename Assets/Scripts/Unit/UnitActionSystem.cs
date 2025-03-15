@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel.Design.Serialization;
 using GridSystem;
 using NewInputSystem;
-using NewInputSystem.BaseActions;
 using UnityEngine;
 
 namespace Unit
@@ -17,12 +16,28 @@ namespace Unit
 
         public static UnitActionSystem Instance { get; private set; }
 
+        private bool _isBusy;
+
         private void Start()
         {
             Instance = this;
             _gameInput = GameInput.Instance;
             _gameInput.OnMoveAction += OnMoveAction;
             _gameInput.OnUnitSelect += OnUnitSelected;
+        }
+
+        private void Update()
+        {
+            if (_isBusy)
+            {
+                return;
+            }
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                SetBusy();
+                selectedUnit.GetSpinAction().Spin(ClearBusy);
+            }
         }
 
         private void OnUnitSelected(object sender, EventArgs e)
@@ -33,13 +48,12 @@ namespace Unit
         private void OnMoveAction(object sender, EventArgs e)
         {
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMouseWorldPosition());
-            
-            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
-            {
-                selectedUnit.GetMoveAction().MoveUnit(mouseGridPosition);
-            }
 
-          
+            if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition)&& !_isBusy )
+            {
+                SetBusy();
+                selectedUnit.GetMoveAction().MoveUnit(mouseGridPosition,ClearBusy);
+            }
         }
 
         private void HandleUnitSelection()
@@ -59,6 +73,16 @@ namespace Unit
         {
             selectedUnit = unit;
             OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SetBusy()
+        {
+            _isBusy = true;
+        }
+
+        private void ClearBusy()
+        {
+            _isBusy = false;
         }
 
         public Unit GetSelectedUnit()

@@ -1,7 +1,9 @@
 using System;
 using GridSystem;
 using NewInputSystem;
-using NewInputSystem.BaseActions;
+using NewInputSystem.ActionSystem.BaseAction;
+using NewInputSystem.ActionSystem.MoveAction;
+using NewInputSystem.ActionSystem.SpinAction;
 using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -12,10 +14,14 @@ namespace Unit
     {
         private GridPosition _gridPosition;
         private MoveAction _moveAction;
+        private SpinAction _spinAction;
+        private BaseAction[] _baseActionsArray;
 
         private void Awake()
         {
             _moveAction = GetComponent<MoveAction>();
+            _spinAction = GetComponent<SpinAction>();
+            _baseActionsArray = GetComponents<BaseAction>();
         }
 
 
@@ -38,6 +44,8 @@ namespace Unit
         }
 
         public MoveAction GetMoveAction() => _moveAction;
+        public SpinAction GetSpinAction() => _spinAction;
         public GridPosition GetGridPosition() => _gridPosition;
+        public BaseAction[] GetBaseActionArray() => _baseActionsArray;
     }
 }

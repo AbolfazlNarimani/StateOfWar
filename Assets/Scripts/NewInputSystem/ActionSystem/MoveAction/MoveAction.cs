@@ -1,50 +1,62 @@
 using System;
 using System.Collections.Generic;
 using GridSystem;
-using NUnit.Framework;
 using UnityEngine;
 
-namespace NewInputSystem.BaseActions
+namespace NewInputSystem.ActionSystem.MoveAction
 {
-    public class MoveAction : MonoBehaviour
+    public class MoveAction : BaseAction.BaseAction
     {
         [SerializeField] private int maxMoveDistance = 4;
-        private const string IS_MOVING = "IsMoving";
+        private const string IsMoving = "IsMoving";
+        private const string ActionName = "Move";
         private Vector3 _targetPosition;
         private float _stoppingDistance;
-        private Unit.Unit _unit;
         [SerializeField] private Animator animator;
-
-
-        private void Awake()
+        
+        protected override void Awake()
         {
-            _unit = GetComponentInParent<Unit.Unit>();
+            base.Awake();
             _targetPosition = transform.position;
+        }
+
+        public override string GetActionName()
+        {
+            return ActionName; ;
         }
 
 
         void Update()
         {
+            if (!IsActive)
+            {
+                return;
+            }
+            
             float moveSpeed = 4f;
             _stoppingDistance = .1f;
-
+            Vector3 moveDirection = (_targetPosition - transform.position).normalized;
             if (Vector3.Distance(transform.position, _targetPosition) > _stoppingDistance)
             {
-                Vector3 moveDirection = (_targetPosition - transform.position).normalized;
-                animator.SetBool(IS_MOVING, true);
+                animator.SetBool(IsMoving, true);
                 transform.position += moveDirection * (moveSpeed * Time.deltaTime);
-                float rotateSpeed = 10f;
-                transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
             }
             else
             {
-                animator.SetBool(IS_MOVING, false);
+                animator.SetBool(IsMoving, false);
+                IsActive = false;
+                OnActionComplete?.Invoke();
             }
+
+            float rotateSpeed = 10f;
+            transform.forward = Vector3.Lerp(transform.forward, moveDirection, rotateSpeed * Time.deltaTime);
         }
 
-        public void MoveUnit(GridPosition targetPosition)
+        public void MoveUnit(GridPosition targetPosition,Action onActionComplete)
         {
+            this.OnActionComplete = onActionComplete;
             _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
+            IsActive = true;
         }
 
         public bool IsValidActionGridPosition(GridPosition gridPosition)
@@ -57,7 +69,7 @@ namespace NewInputSystem.BaseActions
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();
 
-            GridPosition unitGridPosition = _unit.GetGridPosition();
+            GridPosition unitGridPosition = Unit.GetGridPosition();
 
             for (int X = -maxMoveDistance; X <= maxMoveDistance; X++)
             {
@@ -81,6 +93,7 @@ namespace NewInputSystem.BaseActions
                         //grid position is occupied with another unit
                         continue;
                     }
+
                     validActionGridPositions.Add(testGridPosition);
                 }
             }
