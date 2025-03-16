@@ -5,21 +5,21 @@ namespace GridSystem
 {
     public struct GridPosition : IEquatable<GridPosition>
     {
-        public int X;
-        public int Z;
+        public int x;
+        public int z;
 
         public GridPosition(int x, int z)
         {
-            this.X = x;
-            this.Z = z;
+            this.x = x;
+            this.z = z;
         }
 
         public override string ToString()
         {
-            return $" X:{X} Z:{Z} ";
+            return $" X:{x} Z:{z} ";
         }
 
-        public static bool operator ==(GridPosition a, GridPosition b) => a.X == b.X && a.Z == b.Z;
+        public static bool operator ==(GridPosition a, GridPosition b) => a.x == b.x && a.z == b.z;
 
         public static bool operator !=(GridPosition a, GridPosition b) => !(a == b);
 
@@ -36,15 +36,15 @@ namespace GridSystem
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(X, Z);
+            return HashCode.Combine(x, z);
         }
 
         public static GridPosition operator +(GridPosition a, GridPosition b)
         {
-            return new GridPosition(a.X + b.X, a.Z + b.Z);
+            return new GridPosition(a.x + b.x, a.z + b.z);
         }public static GridPosition operator -(GridPosition a, GridPosition b)
         {
-            return new GridPosition(a.X - b.X, a.Z - b.Z);
+            return new GridPosition(a.x - b.x, a.z - b.z);
         }
         
     }

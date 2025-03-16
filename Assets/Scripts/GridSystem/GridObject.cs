@@ -40,5 +40,10 @@ namespace GridSystem
         {
             _unitList.Remove(unit);
         }
+
+        public bool ContainsUnit()
+        {
+            return _unitList.Count > 0;
+        }
     }
 }
