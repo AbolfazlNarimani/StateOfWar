@@ -8,6 +8,7 @@ namespace NewInputSystem.ActionSystem.MoveAction
     public class MoveAction : BaseAction.BaseAction
     {
         [SerializeField] private int maxMoveDistance = 4;
+        
         private const string IsMoving = "IsMoving";
         private const string ActionName = "Move";
         private Vector3 _targetPosition;
@@ -102,5 +103,7 @@ namespace NewInputSystem.ActionSystem.MoveAction
 
             return validActionGridPositions;
         }
+
+
     }
 }

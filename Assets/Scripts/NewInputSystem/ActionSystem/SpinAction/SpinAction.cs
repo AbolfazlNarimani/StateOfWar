@@ -56,5 +56,10 @@ namespace NewInputSystem.ActionSystem.SpinAction
         {
             return ActionName;
         }
+
+        public override int GetActionPointsCost()
+        {
+            return 2;
+        }
     }
 }

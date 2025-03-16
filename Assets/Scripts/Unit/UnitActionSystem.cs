@@ -16,6 +16,9 @@ namespace Unit
 
         public event EventHandler OnSelectedUnitChanged;
         public event EventHandler OnSelectedActionChanged;
+        public event EventHandler OnActionStarted;
+        public event EventHandler<bool> OnBusyChanged;
+
 
         public static UnitActionSystem Instance { get; private set; }
 
@@ -38,16 +41,16 @@ namespace Unit
 
         private void OnMoveAction(object sender, EventArgs e)
         {
-            if (_isBusy) return;
-
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMouseWorldPosition());
+            
+            if (_isBusy) return;
+            if (!_selectedAction.IsValidActionGridPosition(mouseGridPosition)) return;
+            if (!selectedUnit.TrySpendActionPointsToTakeAction(_selectedAction)) return;
 
 
-            if (_selectedAction.IsValidActionGridPosition(mouseGridPosition) && !_isBusy)
-            {
-                SetBusy();
-                _selectedAction.TakeAction(mouseGridPosition, ClearBusy);
-            }
+            SetBusy();
+            _selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+            OnActionStarted?.Invoke(this, EventArgs.Empty);
         }
 
         private void HandleUnitSelection()
@@ -78,11 +81,13 @@ namespace Unit
         private void SetBusy()
         {
             _isBusy = true;
+            OnBusyChanged?.Invoke(this, true);
         }
 
         private void ClearBusy()
         {
             _isBusy = false;
+            OnBusyChanged?.Invoke(this, false);
         }
 
         public Unit GetSelectedUnit()

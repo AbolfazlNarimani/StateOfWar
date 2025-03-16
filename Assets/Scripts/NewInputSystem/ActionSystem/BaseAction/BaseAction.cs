@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace NewInputSystem.ActionSystem.BaseAction
 {
+    // you can use GetActionCost fun to define a cost for actions
     public abstract class BaseAction : MonoBehaviour
     {
         protected Unit.Unit Unit;
@@ -28,5 +29,15 @@ namespace NewInputSystem.ActionSystem.BaseAction
 
         public abstract Sprite GetActionIcon();
         public abstract void TakeAction(GridPosition gridPosition, Action OnActionComplete);
+
+        public virtual int GetActionPointsCost()
+        {
+            return 1;
+        }
+
+        public virtual int GetActionNameFontSize()
+        {
+            return 0;
+        }
     }
 }
