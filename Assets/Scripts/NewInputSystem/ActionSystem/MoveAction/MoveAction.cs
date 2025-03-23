@@ -52,8 +52,7 @@ namespace NewInputSystem.ActionSystem.MoveAction
             else
             {
                 animator.SetBool(IsMoving, false);
-                IsActive = false;
-                OnActionComplete?.Invoke();
+                ActionComplete();
             }
 
             float rotateSpeed = 10f;
@@ -63,11 +62,15 @@ namespace NewInputSystem.ActionSystem.MoveAction
         // old moveUnit function
         public override void TakeAction(GridPosition targetPosition, Action onActionComplete)
         {
-            this.OnActionComplete = onActionComplete;
+            ActionStart(onActionComplete);
             _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
-            IsActive = true;
         }
-        
+
+        public override int GetActionPointsCost()
+        {
+            return 1;
+        }
+
         public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();

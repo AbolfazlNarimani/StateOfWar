@@ -30,10 +30,21 @@ namespace NewInputSystem.ActionSystem.BaseAction
         public abstract Sprite GetActionIcon();
         public abstract void TakeAction(GridPosition gridPosition, Action OnActionComplete);
 
-        public virtual int GetActionPointsCost()
+        public abstract int GetActionPointsCost();
+
+        protected void ActionStart(Action OnActionComplete)
         {
-            return 1;
+            IsActive = true;
+            this.OnActionComplete = OnActionComplete;
         }
+
+        protected void ActionComplete()
+        {
+            IsActive = false;
+            OnActionComplete();
+        }
+           
+        
 
         public virtual int GetActionNameFontSize()
         {

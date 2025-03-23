@@ -75,7 +75,6 @@ namespace Ui.UnitActionSystemUI
             {
                 Button button = actionButtonPrefab.GetComponent<Button>();
                 TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
-                Debug.Log(textMesh);
                 
                 if (baseAction.GetActionNameFontSize() != 0)
                 {

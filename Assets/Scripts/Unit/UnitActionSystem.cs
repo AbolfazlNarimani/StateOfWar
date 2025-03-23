@@ -42,11 +42,11 @@ namespace Unit
         private void OnMoveAction(object sender, EventArgs e)
         {
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMouseWorldPosition());
-            
+
             if (_isBusy) return;
             if (!_selectedAction.IsValidActionGridPosition(mouseGridPosition)) return;
             if (!selectedUnit.TrySpendActionPointsToTakeAction(_selectedAction)) return;
-
+            if (!TurnSystem.TurnSystem.Instance.IsPlayerTurn()) return;
 
             SetBusy();
             _selectedAction.TakeAction(mouseGridPosition, ClearBusy);
@@ -56,15 +56,13 @@ namespace Unit
         private void HandleUnitSelection()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
             if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, unitLayerMask))
             {
                 // selectedUnit = hit.collider.GetComponent<Unit>();
-                if (hit.transform.TryGetComponent<Unit>(out Unit unit))
+                if (hit.transform.TryGetComponent<Unit>(out Unit unit) && selectedUnit != unit && !unit.IsEnemy())
                 {
-                    if (selectedUnit != unit)
-                    {
-                        SetSelectedUnit(unit);
-                    }
+                    SetSelectedUnit(unit);
                 }
             }
         }

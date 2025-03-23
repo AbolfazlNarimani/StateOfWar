@@ -19,8 +19,10 @@ namespace Unit
         private BaseAction[] _baseActionsArray;
         [SerializeField] private int actionPoints;
         private int _defaultActionPoints;
-        
+
         public static event EventHandler OnAnyActionPointsChanged;
+
+        [SerializeField] private bool isEnemy;
 
         private void Awake()
         {
@@ -40,8 +42,13 @@ namespace Unit
 
         private void OnTurnNumberChanged(object sender, EventArgs e)
         {
-            actionPoints = _defaultActionPoints;
-            OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+            if ((IsEnemy() && !TurnSystem.TurnSystem.Instance.IsPlayerTurn()) || (!IsEnemy() && TurnSystem.TurnSystem.Instance.IsPlayerTurn()))
+            {
+                actionPoints = _defaultActionPoints;
+                OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+            }
+               
+            
         }
 
         private void Update()
@@ -61,11 +68,7 @@ namespace Unit
             actionPoints -= amount;
             OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
         }
-        
-        private bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
-        {
-            return actionPoints >= baseAction.GetActionPointsCost();
-        }
+
 
         public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)
         {
@@ -74,6 +77,7 @@ namespace Unit
                 SpendActionPoints(baseAction.GetActionPointsCost());
                 return true;
             }
+
             return false;
         }
 
@@ -81,7 +85,19 @@ namespace Unit
         public SpinAction GetSpinAction() => _spinAction;
         public GridPosition GetGridPosition() => _gridPosition;
         public BaseAction[] GetBaseActionArray() => _baseActionsArray;
-        
+
         public int GetRemainingActionPoints() => actionPoints;
+        
+        public Vector3 GetWorldPosition() => transform.position;
+
+        public bool IsEnemy()
+        {
+            return isEnemy;
+        }
+
+        public void Damage()
+        {
+            Debug.Log(transform +"dmg");
+        }
     }
 }

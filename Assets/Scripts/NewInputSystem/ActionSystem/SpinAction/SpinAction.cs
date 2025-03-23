@@ -26,8 +26,7 @@ namespace NewInputSystem.ActionSystem.SpinAction
             _totalSpinAmount += spinAddAmount;
             if (_totalSpinAmount >= 360f)
             {
-                IsActive = false;
-                OnActionComplete?.Invoke();
+                ActionComplete();
             }
         }
 
@@ -39,8 +38,7 @@ namespace NewInputSystem.ActionSystem.SpinAction
 
         public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
         {
-            this.OnActionComplete = onActionComplete;
-            IsActive = true;
+            ActionStart(onActionComplete);
             _totalSpinAmount = 0;
         }
 

@@ -54,5 +54,11 @@ namespace GridSystem
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.ContainsUnit();
         }
+        public Unit.Unit GetUnitAtGridPosition(GridPosition gridPosition)
+        {
+            GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
+            return gridObject.GetUnit();
+        }
+        
     }
 }

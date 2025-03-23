@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 5221353335902978761}
   - component: {fileID: 5106918349516416838}
   - component: {fileID: 4415815453278649907}
+  - component: {fileID: -560316239201164102}
   m_Layer: 7
   m_Name: Unit
   m_TagString: Untagged
@@ -150,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionPoints: 2
+  isEnemy: 0
 --- !u!65 &5221353335902978761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -199,6 +201,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionIcon: {fileID: 1510120445, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+--- !u!114 &-560316239201164102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3555788696555512905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb1fd30ea1300c498a696232935cee91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shootSprite: {fileID: 21300022, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
 --- !u!1001 &5534163054109334333
 PrefabInstance:
   m_ObjectHideFlags: 0

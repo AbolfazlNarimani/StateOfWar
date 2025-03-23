@@ -45,5 +45,14 @@ namespace GridSystem
         {
             return _unitList.Count > 0;
         }
+
+        public Unit.Unit GetUnit()
+        {
+            if (ContainsUnit())
+            {
+                return _unitList[0];
+            }
+            return null;
+        }
     }
 }
