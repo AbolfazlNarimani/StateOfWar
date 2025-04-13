@@ -3516,6 +3516,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Unit
       objectReference: {fileID: 0}
+    - target: {fileID: 4515977913249973686, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
+      propertyPath: bulletProjectilePrefab
+      value: 
+      objectReference: {fileID: 6709847493226960273, guid: 48151c2fab7c3dd04ae6c378d0fcf898, type: 3}
     - target: {fileID: 5039947149763917611, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
