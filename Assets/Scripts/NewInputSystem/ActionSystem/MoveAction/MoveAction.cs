@@ -9,12 +9,12 @@ namespace NewInputSystem.ActionSystem.MoveAction
     {
         [SerializeField] private int maxMoveDistance = 4;
         
-        private const string IsMoving = "IsMoving";
         private const string ActionName = "Move";
         private Vector3 _targetPosition;
         private float _stoppingDistance;
         [SerializeField] private Sprite actionIcon;
-        [SerializeField] private Animator animator;
+        public event EventHandler OnStartMoving;
+        public event EventHandler OnStopMoving;
 
         protected override void Awake()
         {
@@ -46,12 +46,11 @@ namespace NewInputSystem.ActionSystem.MoveAction
             Vector3 moveDirection = (_targetPosition - transform.position).normalized;
             if (Vector3.Distance(transform.position, _targetPosition) > _stoppingDistance)
             {
-                animator.SetBool(IsMoving, true);
                 transform.position += moveDirection * (moveSpeed * Time.deltaTime);
             }
             else
             {
-                animator.SetBool(IsMoving, false);
+                OnStopMoving?.Invoke(this, EventArgs.Empty);
                 ActionComplete();
             }
 
@@ -62,6 +61,7 @@ namespace NewInputSystem.ActionSystem.MoveAction
         // old moveUnit function
         public override void TakeAction(GridPosition targetPosition, Action onActionComplete)
         {
+            OnStartMoving?.Invoke(this, EventArgs.Empty);
             ActionStart(onActionComplete);
             _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
         }

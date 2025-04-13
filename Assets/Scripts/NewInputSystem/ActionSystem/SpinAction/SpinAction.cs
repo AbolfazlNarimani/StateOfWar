@@ -12,7 +12,7 @@ namespace NewInputSystem.ActionSystem.SpinAction
         private const string ActionName = "Spin";
         
         [SerializeField] private Sprite actionIcon;
-
+        
 
         private void Update()
         {
