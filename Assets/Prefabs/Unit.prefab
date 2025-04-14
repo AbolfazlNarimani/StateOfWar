@@ -146,6 +146,8 @@ GameObject:
   - component: {fileID: 4415815453278649907}
   - component: {fileID: -560316239201164102}
   - component: {fileID: 4515977913249973686}
+  - component: {fileID: 5382294605078801684}
+  - component: {fileID: 6231358260419028484}
   m_Layer: 7
   m_Name: Unit
   m_TagString: Untagged
@@ -260,6 +262,33 @@ MonoBehaviour:
   animator: {fileID: 5593374737744079297}
   bulletProjectilePrefab: {fileID: 6709847493226960273, guid: 48151c2fab7c3dd04ae6c378d0fcf898, type: 3}
   bulletSpawnPoint: {fileID: 150191675368401192}
+--- !u!114 &5382294605078801684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3555788696555512905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72217507b1232193db24b4d9b6c66c52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+--- !u!114 &6231358260419028484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3555788696555512905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c076af3e8f87702f0b15ca160f003836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ragdollPrefab: {fileID: 5039947149763917611, guid: 34b78daecea7308fea479e75cf1b6041, type: 3}
+  unitGun: {fileID: 2150995377945773072}
 --- !u!1001 &5534163054109334333
 PrefabInstance:
   m_ObjectHideFlags: 0
