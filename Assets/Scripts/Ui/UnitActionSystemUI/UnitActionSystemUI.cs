@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using NewInputSystem.ActionSystem.BaseAction;
+using GamePlay.NewInputSystem.ActionSystem.BaseAction;
 using NUnit.Framework.Internal;
 using TMPro;
 using Unit;
@@ -15,7 +15,7 @@ namespace Ui.UnitActionSystemUI
         [SerializeField] private Transform actionButtonPrefab;
         [SerializeField] private Transform actionButtonContainerTransform;
         [SerializeField] private TextMeshProUGUI actionPoints;
-        private Unit.Unit _selectedUnit;
+        private GamePlay.Unit.Unit _selectedUnit;
         private List<ActionButtonUI.ActionButtonUI> _actionButtonList;
 
         private void Awake()
@@ -29,7 +29,7 @@ namespace Ui.UnitActionSystemUI
             UnitActionSystem.Instance.OnSelectedActionChanged += OnSelectedActionChanged;
             UnitActionSystem.Instance.OnActionStarted += OnActionStarted;
             TurnSystem.TurnSystem.Instance.OnTurnNumberChanged += OnTurnNumberChanged;
-            Unit.Unit.OnAnyActionPointsChanged += OnAnyActionPointsChanged;
+            GamePlay.Unit.Unit.OnAnyActionPointsChanged += OnAnyActionPointsChanged;
             CreateUnitActionButtons();
             UpdateSelectedVisual();
             UpdateActionPoints();
@@ -75,7 +75,6 @@ namespace Ui.UnitActionSystemUI
             {
                 Button button = actionButtonPrefab.GetComponent<Button>();
                 TextMeshProUGUI textMesh = button.GetComponentInChildren<TextMeshProUGUI>();
-                Debug.Log(textMesh);
                 
                 if (baseAction.GetActionNameFontSize() != 0)
                 {

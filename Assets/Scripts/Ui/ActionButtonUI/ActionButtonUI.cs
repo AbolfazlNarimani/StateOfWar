@@ -1,4 +1,4 @@
-using NewInputSystem.ActionSystem.BaseAction;
+using GamePlay.NewInputSystem.ActionSystem.BaseAction;
 using TMPro;
 using Unit;
 using Unity.VisualScripting;
