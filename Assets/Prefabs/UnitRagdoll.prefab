@@ -73,7 +73,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3555788696555512905}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 219be2a8eef0f44b38f158cc8445a065, type: 3}
+  m_Script: {fileID: 11500000, guid: efecf199bd709c4b1ab8d54119232754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ragDollRootBone: {fileID: 5538577738363643519}
