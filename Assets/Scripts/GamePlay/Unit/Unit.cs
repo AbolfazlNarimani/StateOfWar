@@ -29,11 +29,12 @@ namespace GamePlay.Unit
 
         private void Awake()
         {
+            _healthSystem = GetComponent<HealthSystem>();
             _moveAction = GetComponent<MoveAction>();
             _spinAction = GetComponent<SpinAction>();
             _baseActionsArray = GetComponents<BaseAction>();
             _defaultActionPoints = actionPoints;
-            _healthSystem = GetComponent<HealthSystem>();
+          
         }
 
 
