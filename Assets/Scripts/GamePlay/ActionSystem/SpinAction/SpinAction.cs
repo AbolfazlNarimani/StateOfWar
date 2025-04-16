@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GamePlay.NewInputSystem.ActionSystem.BaseAction;
+using GamePlay.ActionSystem.BaseAction;
 using GridSystem;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;

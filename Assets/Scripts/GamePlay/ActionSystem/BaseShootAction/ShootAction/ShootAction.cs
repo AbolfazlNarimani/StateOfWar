@@ -1,13 +1,22 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.GridSystem;
+using GamePlay.Unit.BaseUnit;
 using GridSystem;
 using UnityEngine;
 
-namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
+namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 {
     public class ShootAction : BaseAction.BaseAction
     {
+        // Configuration - set these in inspector per unit type
+        [SerializeField] protected int maxShootDistance = 20;
+        [SerializeField] protected int damageAmount = 50;
+        [SerializeField] protected int actionPointCost = 1;
+        [SerializeField] private Sprite shootSprite;
+
+        // Rest of your existing ShootAction implementation...
+
         private enum State
         {
             Aiming,
@@ -16,21 +25,9 @@ namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
         }
 
         private State _state;
-        [SerializeField] private Sprite shootSprite;
-        private const string ActionName = "Shoot";
-        private readonly int _maxShootDistance = 7;
         private float _stateTimer;
-        private GamePlay.Unit.Unit _targetUnit;
         private bool _canShootBullet;
-
-        public event EventHandler<OnShootEventArgs> OnUnitShoot;
-
-        public class OnShootEventArgs : EventArgs
-        {
-            public GamePlay.Unit.Unit TargetUnit;
-            public GamePlay.Unit.Unit shootingUnit;
-        }
-         
+        private const string ActionName = "Shoot";
 
         private void Update()
         {
@@ -38,7 +35,7 @@ namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
             {
                 return;
             }
-            
+
             _stateTimer -= Time.deltaTime;
             switch (_state)
             {
@@ -50,24 +47,17 @@ namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
                 case State.Shooting:
                     if (_canShootBullet)
                     {
-                      
                         Shoot();
                         _canShootBullet = false;
                     }
+
                     break;
             }
-            
+
             if (_stateTimer <= 0)
             {
                 NextState();
             }
-        }
-
-        private void Shoot()
-        {
-            OnUnitShoot?.Invoke(this, new OnShootEventArgs{TargetUnit = _targetUnit , shootingUnit = Unit});
-            _targetUnit.Damage(50);
-           
         }
 
         private void NextState()
@@ -95,8 +85,9 @@ namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
                 case State.CoolOff:
                     if (_stateTimer <= 0)
                     {
-                       ActionComplete();
+                        ActionComplete();
                     }
+
                     break;
             }
         }
@@ -104,45 +95,36 @@ namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
         public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();
-
             GridPosition unitGridPosition = Unit.GetGridPosition();
 
-            for (int x = -_maxShootDistance; x <= _maxShootDistance; x++)
+            // Create a square area around the unit
+            for (int x = -maxShootDistance; x <= maxShootDistance; x++)
             {
-                for (int z = -_maxShootDistance; z <= _maxShootDistance; z++)
+                for (int z = -maxShootDistance; z <= maxShootDistance; z++)
                 {
                     GridPosition offsetGridPosition = new GridPosition(x, z);
                     GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
 
+                    // Skip invalid grid positions
                     if (!LevelGrid.Instance.IsGridPositionValid(testGridPosition))
-                    {
                         continue;
-                    }
 
+                    // Calculate actual distance (Manhattan distance)
                     int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                    if (testDistance > _maxShootDistance)
-                    {
+                    if (testDistance > maxShootDistance)
                         continue;
-                    }
 
-
+                    // Skip if no unit at position
                     if (!LevelGrid.Instance.HasAnyUnitAtGridPosition(testGridPosition))
-                    {
-                        //grid position is empty
                         continue;
-                    }
 
+                    BaseUnit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
-                    GamePlay.Unit.Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
-
-                    if (targetUnit.IsEnemy() == Unit.IsEnemy())
+                    // CRITICAL FIX: Changed == to != for enemy check
+                    if (targetUnit.IsEnemy() != Unit.IsEnemy())
                     {
-                        // Both Units Are on the same team
-                        continue;
+                        validActionGridPositions.Add(testGridPosition);
                     }
-
-
-                    validActionGridPositions.Add(testGridPosition);
                 }
             }
 
@@ -161,20 +143,46 @@ namespace GamePlay.NewInputSystem.ActionSystem.ShootAction
 
         public override void TakeAction(GridPosition gridPosition, Action OnActionComplete)
         {
-           
             ActionStart(OnActionComplete);
             _targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             _canShootBullet = true;
-            
-            
+
+
             _state = State.Aiming;
             float aimingStateTime = 1f;
             _stateTimer = aimingStateTime;
         }
 
-        public override int GetActionPointsCost()
+        public override int GetActionPointsCost() => actionPointCost;
+
+
+        // ... other fields ...
+
+        private BaseUnit _targetUnit; // Changed from GamePlay.Unit.BaseUnit.BaseUnit
+
+        public event EventHandler<OnShootEventArgs> OnUnitShoot;
+
+        public class OnShootEventArgs : EventArgs
         {
-            return 1;
+            public BaseUnit TargetUnit; // Updated type
+            public BaseUnit ShootingUnit; // Updated type and fixed casing
         }
+        
+        private void Shoot()
+        {
+            OnUnitShoot?.Invoke(this, new OnShootEventArgs
+            {
+                TargetUnit = _targetUnit,
+                ShootingUnit = Unit // Now properly references the BaseUnit
+            });
+            _targetUnit.Damage(damageAmount);
+        }
+
+        // ... rest of your ShootAction code ...
+
+        // Keep all other existing methods
     }
 }
+
+
+

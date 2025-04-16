@@ -292,6 +292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 851dbd38ef86f953da9866f29a2182e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxShootDistance: 7
+  damageAmount: 50
+  actionPointCost: 1
   shootSprite: {fileID: 21300022, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
 --- !u!114 &745354696697021008
 MonoBehaviour:

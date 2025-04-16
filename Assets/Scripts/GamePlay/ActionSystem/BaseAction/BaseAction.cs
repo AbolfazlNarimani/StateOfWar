@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using GridSystem;
 using UnityEngine;
 
-namespace GamePlay.NewInputSystem.ActionSystem.BaseAction
+namespace GamePlay.ActionSystem.BaseAction
 {
     // you can use GetActionCost fun to define a cost for actions
     public abstract class BaseAction : MonoBehaviour
     {
-        protected GamePlay.Unit.Unit Unit;
+        protected GamePlay.Unit.BaseUnit.BaseUnit Unit;
         protected bool IsActive;
         protected Action OnActionComplete;
         
 
         protected virtual void Awake()
         {
-            Unit = GetComponentInParent<GamePlay.Unit.Unit>();
+            Unit = GetComponentInParent<GamePlay.Unit.BaseUnit.BaseUnit>();
         }
 
         public virtual bool IsValidActionGridPosition(GridPosition gridPosition)

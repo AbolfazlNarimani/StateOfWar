@@ -17,25 +17,25 @@ namespace GamePlay.GridSystem
             _gridSystem.CreateDebugObjects(debugObjectPrefab);
         }
 
-        public void AddUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.Unit unit)
+        public void AddUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             gridObject.AddUnit(unit);
         }
 
-        public List<GamePlay.Unit.Unit> GetUnitListAtGridPosition(GridPosition gridPosition)
+        public List<GamePlay.Unit.BaseUnit.BaseUnit> GetUnitListAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.GetUnitList();
         }
 
-        public void RemoveUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.Unit unit)
+        public void RemoveUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             gridObject.RemoveUnit(unit);
         }
 
-        public void UnitMovedGridPosition(GamePlay.Unit.Unit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
+        public void UnitMovedGridPosition(GamePlay.Unit.BaseUnit.BaseUnit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
         {
             RemoveUnitAtGridPosition(fromGridPosition, unit);
             AddUnitAtGridPosition(toGridPosition, unit);
@@ -54,7 +54,7 @@ namespace GamePlay.GridSystem
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.ContainsUnit();
         }
-        public GamePlay.Unit.Unit GetUnitAtGridPosition(GridPosition gridPosition)
+        public GamePlay.Unit.BaseUnit.BaseUnit GetUnitAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.GetUnit();

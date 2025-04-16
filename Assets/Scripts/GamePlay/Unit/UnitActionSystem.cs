@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.Design.Serialization;
+using GamePlay.ActionSystem.BaseAction;
 using GamePlay.GridSystem;
-using GamePlay.NewInputSystem.ActionSystem.BaseAction;
 using GridSystem;
 using NewInputSystem;
 using UnityEngine;

@@ -1,6 +1,6 @@
 using System;
+using GamePlay.ActionSystem.BaseShootAction.ShootAction;
 using GamePlay.Health;
-using GamePlay.NewInputSystem.ActionSystem.ShootAction;
 using NewInputSystem.ActionSystem.MoveAction;
 using UnityEngine;
 
