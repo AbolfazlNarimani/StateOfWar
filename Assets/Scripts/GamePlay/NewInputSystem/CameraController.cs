@@ -1,3 +1,4 @@
+using GamePlay.NewInputSystem;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;

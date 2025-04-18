@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.ActionSystem.BaseAction;
+using GamePlay.Unit;
+using GamePlay.Unit.BaseUnit;
 using NUnit.Framework.Internal;
 using TMPro;
-using Unit;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ namespace Ui.UnitActionSystemUI
         [SerializeField] private Transform actionButtonPrefab;
         [SerializeField] private Transform actionButtonContainerTransform;
         [SerializeField] private TextMeshProUGUI actionPoints;
-        private GamePlay.Unit.Unit _selectedUnit;
+        private GamePlay.Unit.BaseUnit.BaseUnit _selectedUnit;
         private List<ActionButtonUI.ActionButtonUI> _actionButtonList;
 
         private void Awake()
@@ -25,14 +26,35 @@ namespace Ui.UnitActionSystemUI
 
         private void Start()
         {
+            // Ensure instance exists first
+            if (UnitActionSystem.Instance == null)
+            {
+                Debug.LogError("UnitActionSystem instance not found!");
+                return;
+            }
+            // Null-check the prefab
+            if (actionButtonPrefab == null)
+            {
+                Debug.LogError("Action button prefab not assigned!");
+                return;
+            }
             UnitActionSystem.Instance.OnSelectedUnitChanged += OnUnitSelectionChanged;
             UnitActionSystem.Instance.OnSelectedActionChanged += OnSelectedActionChanged;
             UnitActionSystem.Instance.OnActionStarted += OnActionStarted;
             TurnSystem.TurnSystem.Instance.OnTurnNumberChanged += OnTurnNumberChanged;
-            GamePlay.Unit.Unit.OnAnyActionPointsChanged += OnAnyActionPointsChanged;
+            BaseUnit.OnAnyActionPointsChanged += OnAnyActionPointsChanged;
             CreateUnitActionButtons();
             UpdateSelectedVisual();
             UpdateActionPoints();
+            
+            /*// Initialize with current selection
+            _selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+            if (_selectedUnit != null)
+            {
+                CreateUnitActionButtons();
+                UpdateActionPoints();
+            }*/
+            
         }
 
         private void OnAnyActionPointsChanged(object sender, EventArgs e)

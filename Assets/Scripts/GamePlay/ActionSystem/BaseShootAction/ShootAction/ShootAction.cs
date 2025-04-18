@@ -40,9 +40,25 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             switch (_state)
             {
                 case State.Aiming:
-                    Vector3 aimDirection = (_targetUnit.GetWorldPosition()).normalized;
-                    float rotateSpeed = 10f;
-                    transform.forward = Vector3.Lerp(transform.forward, aimDirection, rotateSpeed * Time.deltaTime);
+
+                    Vector3 targetPosition = _targetUnit.GetWorldPosition();
+                    Vector3 unitPosition = Unit.GetWorldPosition();
+
+                    // Calculate direction with height adjustment
+                    Vector3 aimDirection = (targetPosition - unitPosition).normalized;
+                    aimDirection.y = 0; // Optional: keep rotation horizontal
+
+                    // Smooth rotation with threshold
+                    if (Vector3.Angle(transform.forward, aimDirection) > 5f)
+                    {
+                        float rotateSpeed = 20f; // Increased for responsiveness
+                        transform.forward = Vector3.Lerp(transform.forward, aimDirection,
+                            rotateSpeed * Time.deltaTime);
+                    }
+
+                    // Vector3 aimDirection = (_targetUnit.GetWorldPosition()).normalized;
+                    //  float rotateSpeed = 10f;
+                    // transform.forward = Vector3.Lerp(transform.forward, aimDirection, rotateSpeed * Time.deltaTime);
                     break;
                 case State.Shooting:
                     if (_canShootBullet)
@@ -167,7 +183,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             public BaseUnit TargetUnit; // Updated type
             public BaseUnit ShootingUnit; // Updated type and fixed casing
         }
-        
+
         private void Shoot()
         {
             OnUnitShoot?.Invoke(this, new OnShootEventArgs
@@ -183,6 +199,3 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
         // Keep all other existing methods
     }
 }
-
-
-

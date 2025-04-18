@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Generic;
 using GamePlay.ActionSystem.BaseAction;
-using GamePlay.GridSystem;
-using Unit;
+using GamePlay.Unit;
+using GamePlay.Unit.BaseUnit;
+using GridSystem;
 using UnityEngine;
 
-namespace GridSystem
+namespace GamePlay.GridSystem
 {
     public class GridSystemVisual : MonoBehaviour
     {
@@ -38,6 +38,17 @@ namespace GridSystem
             }
         }
 
+        private void Update()
+        {
+            if (UnitActionSystem.Instance == null) return;
+            if (LevelGrid.Instance == null) return;
+
+            BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
+            if (selectedAction == null) return;
+
+            UpdateGridSystemVisual();
+        }
+
         public void HideAllGridPositions()
         {
             for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++)
@@ -59,15 +70,14 @@ namespace GridSystem
 
         private void UpdateGridSystemVisual()
         {
-            HideAllGridPositions();
-            BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
-            
-            Instance.ShowAllGridPositions(selectedAction.GetValidActionGridPositionList());
-        }
+            BaseUnit selectedUnit = UnitActionSystem.Instance?.GetSelectedUnit();
+            if (selectedUnit == null) return;
 
-        private void Update()
-        {
-            UpdateGridSystemVisual();
+            BaseAction selectedAction = UnitActionSystem.Instance?.GetSelectedAction();
+            if (selectedAction == null) return;
+
+            HideAllGridPositions();
+            Instance.ShowAllGridPositions(selectedAction.GetValidActionGridPositionList());
         }
     }
 }
