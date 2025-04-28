@@ -1,9 +1,9 @@
 using System;
 using GamePlay.ActionSystem.BaseAction;
+using GamePlay.ActionSystem.MoveAction;
 using GamePlay.GridSystem;
 using GamePlay.Health;
 using GridSystem;
-using NewInputSystem.ActionSystem.MoveAction;
 using UnityEngine;
 
 namespace GamePlay.Unit.BaseUnit
@@ -83,6 +83,8 @@ namespace GamePlay.Unit.BaseUnit
 
         // Common properties and methods
         public MoveAction GetMoveAction() => MoveAction;
+        
+        public int GetActionPoints() => actionPoints;
         public GridPosition GetGridPosition() => GridPosition;
         public BaseAction[] GetBaseActionArray() => BaseActionsArray;
         public int GetRemainingActionPoints() => actionPoints;

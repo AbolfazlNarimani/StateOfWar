@@ -26,16 +26,25 @@ namespace GamePlay.Unit
 
         private bool _isBusy;
         
+        
         private void Start()
         {
             Instance = this;
             _gameInput = GameInput.Instance;
+           
+            
+            // Clear any existing subscriptions first
+            _gameInput.OnMoveAction -= OnMoveAction; 
+            _gameInput.OnUnitSelect -= OnUnitSelected;
+            // Re-subscribe
             _gameInput.OnMoveAction += OnMoveAction;
             _gameInput.OnUnitSelect += OnUnitSelected;
+
             
-            // Initialize with no selection
+            // Initialize with null first
             selectedUnit = null;
             _selectedAction = null;
+            _isBusy = false;
     
             // Find first player unit if none is assigned
             if (selectedUnit == null)

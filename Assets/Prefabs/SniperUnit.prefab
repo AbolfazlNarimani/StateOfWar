@@ -53,8 +53,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3555788696555512905, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
       propertyPath: m_Name
-      value: 'SniperUnit]'
+      value: SniperUnit
       objectReference: {fileID: 0}
+    - target: {fileID: 4357098997353115662, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
+      propertyPath: baseUnit
+      value: 
+      objectReference: {fileID: 6041485410288215710}
     - target: {fileID: 5039947149763917611, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

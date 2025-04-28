@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using GamePlay.ActionSystem.BaseAction;
 using GamePlay.GridSystem;
 using GridSystem;
 using UnityEngine;
 
-namespace NewInputSystem.ActionSystem.MoveAction
+namespace GamePlay.ActionSystem.MoveAction
 {
-    public class MoveAction : BaseAction
+    public class MoveAction : BaseAction.BaseAction
     {
         [SerializeField] private int maxMoveDistance = 4;
         

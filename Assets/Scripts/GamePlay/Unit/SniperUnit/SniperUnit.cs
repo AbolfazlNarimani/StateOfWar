@@ -27,10 +27,10 @@ namespace GamePlay.Unit.SniperUnit
             // Sniper might have different costs for certain actions
             if (baseAction is ShootAction)
             {
-                // Maybe snipers spend more points for shooting
-                if (actionPoints >= baseAction.GetActionPointsCost() + 1)
+                // Maybe snipers spend more points for shooting define in sniping action
+                if (actionPoints >= baseAction.GetActionPointsCost())
                 {
-                    SpendActionPoints(baseAction.GetActionPointsCost() + 1);
+                    SpendActionPoints(baseAction.GetActionPointsCost());
                     return true;
                 }
 

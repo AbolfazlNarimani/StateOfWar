@@ -1,7 +1,7 @@
 using System;
 using GamePlay.ActionSystem.BaseShootAction.ShootAction;
+using GamePlay.ActionSystem.MoveAction;
 using GamePlay.Health;
-using NewInputSystem.ActionSystem.MoveAction;
 using UnityEngine;
 
 namespace GamePlay.UnitAnimator
