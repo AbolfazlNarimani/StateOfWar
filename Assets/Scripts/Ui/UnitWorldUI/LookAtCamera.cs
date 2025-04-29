@@ -11,7 +11,7 @@ namespace Ui.UnitWorldUI
 
        private void Awake()
        {
-           cameraTransform = Camera.main.transform;
+           if (UnityEngine.Camera.main != null) cameraTransform = UnityEngine.Camera.main.transform;
        }
 
        private void LateUpdate()

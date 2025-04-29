@@ -63,8 +63,8 @@ namespace GamePlay.ActionSystem.MoveAction
         public override void TakeAction(GridPosition targetPosition, Action onActionComplete)
         {
             OnStartMoving?.Invoke(this, EventArgs.Empty);
-            ActionStart(onActionComplete);
             _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
+            ActionStart(onActionComplete);
         }
 
         public override int GetActionPointsCost()

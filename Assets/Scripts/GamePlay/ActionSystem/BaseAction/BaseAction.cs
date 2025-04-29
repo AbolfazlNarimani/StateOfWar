@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GamePlay.Unit.BaseUnit;
 using GridSystem;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace GamePlay.ActionSystem.BaseAction
         protected GamePlay.Unit.BaseUnit.BaseUnit Unit;
         protected bool IsActive;
         protected Action OnActionComplete;
+        public static event EventHandler OnAnyActionStarted;
+        public static event EventHandler OnAnyActionCompleted;
         
 
         protected virtual void Awake()
@@ -34,25 +37,31 @@ namespace GamePlay.ActionSystem.BaseAction
         protected void ActionStart(Action OnActionComplete)
         {
             IsActive = true;
+            OnAnyActionStarted?.Invoke(this, EventArgs.Empty);
             this.OnActionComplete = OnActionComplete;
+            
         }
 
         protected void ActionComplete()
         {
             IsActive = false;
             OnActionComplete();
+            OnAnyActionCompleted?.Invoke(this, EventArgs.Empty);
         }
 
         public virtual int Damage()
         {
             return 0;
         }
-           
         
-
         public virtual int GetActionNameFontSize()
         {
             return 0;
+        }
+
+        public BaseUnit GetUnit()
+        {
+            return Unit;
         }
     }
 }

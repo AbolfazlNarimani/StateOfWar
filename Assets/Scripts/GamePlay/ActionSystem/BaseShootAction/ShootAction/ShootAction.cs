@@ -159,7 +159,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 
         public override void TakeAction(GridPosition gridPosition, Action OnActionComplete)
         {
-            ActionStart(OnActionComplete);
+            
             _targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             _canShootBullet = true;
 
@@ -167,6 +167,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             _state = State.Aiming;
             float aimingStateTime = 1f;
             _stateTimer = aimingStateTime;
+            ActionStart(OnActionComplete);
         }
 
         public override int GetActionPointsCost() => actionPointCost;
@@ -194,8 +195,11 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             _targetUnit.Damage(damageAmount);
         }
 
-        // ... rest of your ShootAction code ...
 
-        // Keep all other existing methods
+
+        public BaseUnit GetTargetUnit()
+        {
+            return _targetUnit;
+        } 
     }
 }
