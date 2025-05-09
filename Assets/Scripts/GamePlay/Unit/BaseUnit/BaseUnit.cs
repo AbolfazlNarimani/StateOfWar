@@ -4,6 +4,7 @@ using GamePlay.ActionSystem.MoveAction;
 using GamePlay.GridSystem;
 using GamePlay.Health;
 using GridSystem;
+using NewInputSystem.ActionSystem.SpinAction;
 using UnityEngine;
 
 namespace GamePlay.Unit.BaseUnit
@@ -12,12 +13,15 @@ namespace GamePlay.Unit.BaseUnit
     {
         protected GridPosition GridPosition;
         protected MoveAction MoveAction;
+        protected SpinAction SpinAction;
         protected BaseAction[] BaseActionsArray;
         protected HealthSystem HealthSystem;
         [SerializeField] protected int actionPoints;
         protected int DefaultActionPoints;
 
         public static event EventHandler OnAnyActionPointsChanged;
+        public static event EventHandler OnAnyUnitSpawned;
+        public static event EventHandler OnAnyUnitDead;
 
         [SerializeField] protected bool isEnemy;
 
@@ -25,6 +29,7 @@ namespace GamePlay.Unit.BaseUnit
         {
             HealthSystem = GetComponent<HealthSystem>();
             MoveAction = GetComponent<MoveAction>();
+            SpinAction = GetComponent<SpinAction>();
             BaseActionsArray = GetComponents<BaseAction>();
             DefaultActionPoints = actionPoints;
         }
@@ -35,12 +40,15 @@ namespace GamePlay.Unit.BaseUnit
             LevelGrid.Instance.AddUnitAtGridPosition(GridPosition, this);
             TurnSystem.TurnSystem.Instance.OnTurnNumberChanged += OnTurnNumberChanged;
             HealthSystem.OnDead += HealthSystemOnDead;
+            OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void HealthSystemOnDead(object sender, EventArgs e)
         {
             LevelGrid.Instance.RemoveUnitAtGridPosition(GridPosition, this);
             Destroy(gameObject);
+            
+            OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnTurnNumberChanged(object sender, EventArgs e)
@@ -59,8 +67,9 @@ namespace GamePlay.Unit.BaseUnit
 
             if (newGridPosition != GridPosition)
             {
-                LevelGrid.Instance.UnitMovedGridPosition(this, GridPosition, newGridPosition);
+                GridPosition oldGridPosition = GridPosition;
                 GridPosition = newGridPosition;
+                LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
             }
         }
 
@@ -91,5 +100,10 @@ namespace GamePlay.Unit.BaseUnit
         public Vector3 GetWorldPosition() => transform.position;
         public bool IsEnemy() => isEnemy;
         public void Damage(int damageAmount) => HealthSystem.TakeDamage(damageAmount);
+
+        public SpinAction GetSpinAction()
+        {
+            return SpinAction;
+        }
     }
 }

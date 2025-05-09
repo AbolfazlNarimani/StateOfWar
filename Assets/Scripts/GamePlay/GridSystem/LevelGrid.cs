@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using GridSystem;
 using UnityEngine;
+using System;
+
 
 namespace GamePlay.GridSystem
 {
@@ -9,6 +11,9 @@ namespace GamePlay.GridSystem
         public static LevelGrid Instance;
         [SerializeField] Transform debugObjectPrefab;
         private GamePlay.GridSystem.GridSystem _gridSystem;
+
+        public event EventHandler OnAnyUnitMovedGridPosition;
+        public event EventHandler OnAnyUnitDied;
 
         private void Awake()
         {
@@ -32,6 +37,7 @@ namespace GamePlay.GridSystem
         public void RemoveUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
+            OnAnyUnitDied?.Invoke(this, EventArgs.Empty);
             gridObject.RemoveUnit(unit);
         }
 
@@ -39,6 +45,7 @@ namespace GamePlay.GridSystem
         {
             RemoveUnitAtGridPosition(fromGridPosition, unit);
             AddUnitAtGridPosition(toGridPosition, unit);
+            OnAnyUnitMovedGridPosition?.Invoke(this, EventArgs.Empty);
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition) => _gridSystem.GetGridPosition(worldPosition);

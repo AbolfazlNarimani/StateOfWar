@@ -10,7 +10,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
     public class ShootAction : BaseAction.BaseAction
     {
         // Configuration - set these in inspector per unit type
-        [SerializeField] protected int maxShootDistance = 20;
+        [SerializeField] protected int maxShootDistance = 7;
         [SerializeField] protected int damageAmount = 50;
         [SerializeField] protected int actionPointCost = 1;
         [SerializeField] private Sprite shootSprite;
@@ -194,12 +194,15 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             });
             _targetUnit.Damage(damageAmount);
         }
-
-
-
+        
         public BaseUnit GetTargetUnit()
         {
             return _targetUnit;
-        } 
+        }
+
+        public int  GetMaxShootDistance()
+        {
+            return maxShootDistance;
+        }
     }
 }

@@ -1,15 +1,6 @@
-using System;
-using System.Collections;
-using GamePlay.GridSystem;
-using GamePlay.Health;
-using GridSystem;
 using NewInputSystem.ActionSystem.SpinAction;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
-namespace GamePlay.Unit
+namespace GamePlay.Unit.InfantryUnit
 {
     public class Unit : BaseUnit.BaseUnit
     {
