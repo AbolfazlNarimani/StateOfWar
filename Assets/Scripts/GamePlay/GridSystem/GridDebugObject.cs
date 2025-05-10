@@ -1,9 +1,7 @@
-using System;
-using GamePlay.GridSystem;
 using TMPro;
 using UnityEngine;
 
-namespace GridSystem
+namespace GamePlay.GridSystem
 {
     public class GridDebugObject : MonoBehaviour
     {

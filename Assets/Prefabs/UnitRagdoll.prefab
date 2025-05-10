@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efecf199bd709c4b1ab8d54119232754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ragDollRootBone: {fileID: 0}
+  ragDollRootBone: {fileID: 2474001806871580180}
 --- !u!1001 &388869540461665761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -736,6 +736,11 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!4 &2474001806871580180 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5465940246521907071, guid: 3fd19349d452c2698a4cceddd77c2989, type: 3}
+  m_PrefabInstance: {fileID: 7606439277369641323}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3049115313762346019 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4332706925441422008, guid: 3fd19349d452c2698a4cceddd77c2989, type: 3}
