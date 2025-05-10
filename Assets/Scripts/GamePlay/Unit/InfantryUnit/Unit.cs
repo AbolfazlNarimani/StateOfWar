@@ -1,4 +1,4 @@
-using NewInputSystem.ActionSystem.SpinAction;
+using GamePlay.ActionSystem.SpinAction;
 
 namespace GamePlay.Unit.InfantryUnit
 {

@@ -1,276 +1,9 @@
-/*using System;
-using GamePlay.Unit;
-using GamePlay.Unit.BaseUnit;
-using GridSystem;
-using NewInputSystem.ActionSystem.SpinAction;
-using Unity.VisualScripting;
-using UnityEngine;
-using Random = UnityEngine.Random;
-
-namespace GamePlay.Enemy.EnemyAI
-{
-    public class EnemyAI : MonoBehaviour
-    {
-        private enum State
-        {
-            WaitingEnemyTurn,
-            TakingTurn,
-            Busy,
-        }
-
-        private State state;
-
-        private void Awake()
-        {
-            state = State.WaitingEnemyTurn;
-        }
-
-        private float _timer;
-
-        private void Start()
-        {
-            TurnSystem.TurnSystem.Instance.OnTurnNumberChanged += OnTurnChanged;
-        }
-
-        private void OnTurnChanged(object sender, EventArgs e)
-        {
-            if (!TurnSystem.TurnSystem.Instance.IsPlayerTurn())
-            {
-                state = State.Busy;
-                _timer = 2f;
-            }
-        }
-
-
-        private void Update()
-        {
-            if (TurnSystem.TurnSystem.Instance.IsPlayerTurn()) return;
-            state = State.TakingTurn;
-            switch (state)
-            {
-                case State.WaitingEnemyTurn:
-                    break;
-                case State.TakingTurn:
-                    _timer -= Time.deltaTime;
-                    if (_timer <= 0)
-                    {
-                        if (  TryTakeEnemyAIAction(SetStateTakingTurn))
-                        {
-                            //enemy's have action
-                            state = State.Busy;
-                        }
-                        else
-                        {
-                            // no more enemy's have action
-                            TurnSystem.TurnSystem.Instance.NextTurn();
-
-                        }
-
-
-                    }
-
-                    break;
-                case State.Busy:
-                    break;
-            }
-        }
-
-        private bool TryTakeEnemyAIAction(Action onEnemyAiActionComplete)
-        {
-            foreach (BaseUnit enemyUnit in UnitManager.Instance.GetEnemyUnitList() )
-            {
-                if ( TryTakeEnemyAIAction(enemyUnit, onEnemyAiActionComplete))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private bool TryTakeEnemyAIAction(BaseUnit enemyUnit, Action onEnemyAiActionComplete)
-        {
-            SpinAction spinAction = enemyUnit.GetSpinAction();
-            GridPosition actionGridPosition = enemyUnit.GetGridPosition();
-            if (!spinAction.IsValidActionGridPosition(actionGridPosition))
-            {
-                return false;
-            }
-
-            if (!enemyUnit.TrySpendActionPointsToTakeAction(spinAction))
-            {
-                return false;
-            }
-
-            spinAction.TakeAction(actionGridPosition,onEnemyAiActionComplete);
-            return true;
-        }
-
-        private void SetStateTakingTurn()
-
-        {
-            _timer -= Time.deltaTime;
-            state = State.TakingTurn;
-        }
-    }
-}*/
-
-
-/*using System;
-using GamePlay.Unit;
-using GamePlay.Unit.BaseUnit;
-using GridSystem;
-using NewInputSystem.ActionSystem.SpinAction;
-using UnityEngine;
-
-namespace GamePlay.Enemy.EnemyAI
-{
-    public class EnemyAI : MonoBehaviour
-    {
-        private enum State
-        {
-            WaitingEnemyTurn,
-            TakingTurn,
-            Busy,
-        }
-
-        private State state;
-        private float _timer;
-        private int _currentEnemyIndex;
-        private bool _hasEnemyActedThisCycle;
-
-        private void Awake()
-        {
-            state = State.WaitingEnemyTurn;
-            _currentEnemyIndex = 0;
-        }
-
-        private void Start()
-        {
-            TurnSystem.TurnSystem.Instance.OnTurnNumberChanged += OnTurnChanged;
-        }
-
-        private void OnTurnChanged(object sender, EventArgs e)
-        {
-            if (!TurnSystem.TurnSystem.Instance.IsPlayerTurn())
-            {
-                state = State.TakingTurn;
-                _currentEnemyIndex = 0;
-                _timer = 0.5f; // Short delay before first enemy acts
-                _hasEnemyActedThisCycle = false;
-            }
-        }
-
-        private void Update()
-        {
-            if (TurnSystem.TurnSystem.Instance.IsPlayerTurn()) return;
-
-            switch (state)
-            {
-                case State.WaitingEnemyTurn:
-                    break;
-
-                case State.TakingTurn:
-                    _timer -= Time.deltaTime;
-                    if (_timer <= 0)
-                    {
-                        TryNextEnemyAction();
-                    }
-
-                    break;
-
-                case State.Busy:
-                    // Waiting for current action to complete
-                    break;
-            }
-        }
-
-        private void TryNextEnemyAction()
-        {
-            var enemyUnits = UnitManager.Instance.GetEnemyUnitList();
-
-            // If we've processed all enemies, end turn
-            if (_currentEnemyIndex >= enemyUnits.Count && !_hasEnemyActedThisCycle)
-            {
-                if (_hasEnemyActedThisCycle)
-                {
-                    _currentEnemyIndex = 0;
-                    _hasEnemyActedThisCycle = false;
-                    _timer = 0.1f;
-                    return;
-                }
-                else
-                {
-                    // No enemies can act anymore, end turn
-                    TurnSystem.TurnSystem.Instance.NextTurn();
-                    state = State.WaitingEnemyTurn;
-                    return;
-                }
-            }
-
-            // Get current enemy
-            BaseUnit currentEnemy = enemyUnits[_currentEnemyIndex];
-
-            if (currentEnemy.GetActionPoints() == 0)
-            {
-                // Skip dead enemies or those with no AP
-                _currentEnemyIndex++;
-                _timer = 0.1f;
-                return;
-            }
-
-            // making enemies do all thy can 
-            if (TryTakeEnemyAIAction(currentEnemy, OnEnemyActionComplete))
-            {
-                state = State.Busy;
-                _hasEnemyActedThisCycle = true;
-            }
-            else
-            {
-                // This enemy can't act right now, try next one
-                _currentEnemyIndex++;
-                _timer = 0.1f;
-            }
-        }
-
-        private bool TryTakeEnemyAIAction(BaseUnit enemyUnit, Action onEnemyAiActionComplete)
-        {
-            SpinAction spinAction = enemyUnit.GetSpinAction();
-            GridPosition actionGridPosition = enemyUnit.GetGridPosition();
-
-            if (!spinAction.IsValidActionGridPosition(actionGridPosition))
-            {
-                return false;
-            }
-
-            if (!enemyUnit.TrySpendActionPointsToTakeAction(spinAction))
-            {
-                return false;
-            }
-
-            if (enemyUnit.GetActionPoints() >= spinAction.GetActionPointsCost())
-            {
-                spinAction.TakeAction(actionGridPosition, onEnemyAiActionComplete);
-                return true;
-            }
-
-            return false;
-        }
-
-        private void OnEnemyActionComplete()
-        {
-            // Action complete, move to next enemy
-            _currentEnemyIndex++;
-            _timer = 0.5f; // Delay before next enemy acts
-            state = State.TakingTurn;
-        }
-    }
-}*/
-
 using System;
+using GamePlay.ActionSystem.BaseAction;
+using GamePlay.ActionSystem.SpinAction;
 using GamePlay.Unit;
 using GamePlay.Unit.BaseUnit;
 using GridSystem;
-using NewInputSystem.ActionSystem.SpinAction;
 using UnityEngine;
 
 namespace GamePlay.Enemy.EnemyAI
@@ -319,15 +52,16 @@ namespace GamePlay.Enemy.EnemyAI
             {
                 case State.WaitingEnemyTurn:
                     break;
-                    
+
                 case State.TakingTurn:
                     _timer -= Time.deltaTime;
                     if (_timer <= 0)
                     {
                         ProcessEnemyActions();
                     }
+
                     break;
-                    
+
                 case State.Busy:
                     // Waiting for current action to complete
                     break;
@@ -337,7 +71,7 @@ namespace GamePlay.Enemy.EnemyAI
         private void ProcessEnemyActions()
         {
             var enemyUnits = UnitManager.Instance.GetEnemyUnitList();
-            
+
             // If we've processed all enemies, check if any can still act
             if (_currentEnemyIndex >= enemyUnits.Count)
             {
@@ -359,7 +93,7 @@ namespace GamePlay.Enemy.EnemyAI
             }
 
             BaseUnit currentEnemy = enemyUnits[_currentEnemyIndex];
-            
+
             if (currentEnemy.GetActionPoints() == 0)
             {
                 // Skip dead enemies or those with no AP
@@ -383,17 +117,42 @@ namespace GamePlay.Enemy.EnemyAI
 
         private bool TryTakeEnemyAIAction(BaseUnit enemyUnit, Action onEnemyAiActionComplete)
         {
-            SpinAction spinAction = enemyUnit.GetSpinAction();
-            GridPosition actionGridPosition = enemyUnit.GetGridPosition();
-            
-            if (!spinAction.IsValidActionGridPosition(actionGridPosition))
+            EnemyAIAction bestEnemyAIAction = null;
+            BaseAction bestBaseAction = null;
+            foreach (BaseAction baseAction in enemyUnit.GetBaseActionArray())
+            {
+                if (!enemyUnit.CanSpendActionPointsToTakeAction(baseAction))
+                {
+                    // enemy cannot afford this action
+                    continue;
+                }
+                else
+                {
+                    if (bestEnemyAIAction == null)
+                    {
+                        bestEnemyAIAction = baseAction.GetBestEnemyAIAction();
+                        bestBaseAction = baseAction;
+                    }
+                    else
+                    {
+                        EnemyAIAction testEnemyAIAction = baseAction.GetBestEnemyAIAction();
+                        if (testEnemyAIAction != null && testEnemyAIAction.actionValue > bestEnemyAIAction.actionValue)
+                        {
+                            bestEnemyAIAction = baseAction.GetBestEnemyAIAction();
+                            bestBaseAction = baseAction;
+                        }
+                    }
+                }
+            }
+            if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
+            {
+                bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAiActionComplete);
+                return true;
+            }
+            else
+            {
                 return false;
-
-            if (!enemyUnit.TrySpendActionPointsToTakeAction(spinAction))
-                return false;
-
-            spinAction.TakeAction(actionGridPosition, onEnemyAiActionComplete);
-            return true;
+            }
         }
 
         private void OnEnemyActionComplete()

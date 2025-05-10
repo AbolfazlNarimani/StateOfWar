@@ -2718,7 +2718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5590529125366643210, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5590529125366643210, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2758,6 +2758,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6796376248392856214, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: isEnemy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6796376248392856214, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
+      propertyPath: actionPoints
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -3458,15 +3462,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5590529125366643210, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.010552
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 5590529125366643210, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000047683716
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5590529125366643210, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.939319
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5590529125366643210, guid: 3a9ea85ad9858e76bbc3f66f36781d2e, type: 3}
       propertyPath: m_LocalRotation.w

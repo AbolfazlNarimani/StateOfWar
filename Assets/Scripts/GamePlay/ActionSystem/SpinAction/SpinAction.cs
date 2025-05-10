@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using GamePlay.ActionSystem.BaseAction;
+using GamePlay.Enemy.EnemyAI;
 using GridSystem;
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 
-namespace NewInputSystem.ActionSystem.SpinAction
+namespace GamePlay.ActionSystem.SpinAction
 {
-    public class SpinAction : BaseAction
+    public class SpinAction : BaseAction.BaseAction
     {
         private float _totalSpinAmount;
         private const string ActionName = "Spin";
@@ -59,6 +58,15 @@ namespace NewInputSystem.ActionSystem.SpinAction
         public override int GetActionPointsCost()
         {
             return 1;
+        }
+
+        public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+        {
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = 0,
+            };
         }
     }
 }

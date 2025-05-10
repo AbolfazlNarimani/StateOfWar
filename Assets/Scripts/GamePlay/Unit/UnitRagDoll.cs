@@ -10,7 +10,7 @@ namespace GamePlay.Unit
         {
             MatchAllChildTransforms(originalRagDollRootBone, ragDollRootBone);
             //optional
-            // ApplyExplosionToRagdoll(ragDollRootBone, 300f,transform.position,10f);
+             ApplyExplosionToRagdoll(ragDollRootBone, .5f, 1f);
         }
 
         private void MatchAllChildTransforms(Transform root, Transform clone)
@@ -24,7 +24,7 @@ namespace GamePlay.Unit
                     cloneChild.rotation = child.rotation;
 
                     MatchAllChildTransforms(child, cloneChild);
-                    ApplyExplosionToRagdoll(ragDollRootBone, .5f, 1f);
+                   
                 }
             }
         }
@@ -39,7 +39,6 @@ namespace GamePlay.Unit
                     {
                         childRagdollBody.AddExplosionForce(explosionForce, other.transform.position, explosionRange);
                     }
-
                     ApplyExplosionToRagdoll(child, explosionForce, explosionRange);
                 }
             }

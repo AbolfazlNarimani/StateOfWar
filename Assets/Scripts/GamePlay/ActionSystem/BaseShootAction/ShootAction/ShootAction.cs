@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GamePlay.Enemy.EnemyAI;
 using GamePlay.GridSystem;
 using GamePlay.Unit.BaseUnit;
 using GridSystem;
@@ -110,8 +111,13 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 
         public override List<GridPosition> GetValidActionGridPositionList()
         {
-            List<GridPosition> validActionGridPositions = new List<GridPosition>();
             GridPosition unitGridPosition = Unit.GetGridPosition();
+            return GetValidActionGridPositionList(unitGridPosition);
+        }
+        public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
+        {
+            List<GridPosition> validActionGridPositions = new List<GridPosition>();
+           
 
             // Create a square area around the unit
             for (int x = -maxShootDistance; x <= maxShootDistance; x++)
@@ -171,6 +177,17 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
         }
 
         public override int GetActionPointsCost() => actionPointCost;
+        public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+        {
+            BaseUnit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+            
+            targetUnit.GetHealthNormalized();
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = 100 + Mathf.RoundToInt((1 - targetUnit.GetHealthNormalized()) * 100f),
+            };
+        }
 
 
         // ... other fields ...
@@ -203,6 +220,11 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
         public int  GetMaxShootDistance()
         {
             return maxShootDistance;
+        }
+
+        public int GetTargetCountAtPosition(GridPosition gridPosition)
+        {
+            return GetValidActionGridPositionList(gridPosition).Count;
         }
     }
 }

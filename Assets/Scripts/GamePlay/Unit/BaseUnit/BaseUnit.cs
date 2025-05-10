@@ -1,10 +1,12 @@
 using System;
 using GamePlay.ActionSystem.BaseAction;
+using GamePlay.ActionSystem.BaseShootAction.ShootAction;
 using GamePlay.ActionSystem.MoveAction;
+using GamePlay.ActionSystem.SpinAction;
 using GamePlay.GridSystem;
 using GamePlay.Health;
 using GridSystem;
-using NewInputSystem.ActionSystem.SpinAction;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GamePlay.Unit.BaseUnit
@@ -14,6 +16,7 @@ namespace GamePlay.Unit.BaseUnit
         protected GridPosition GridPosition;
         protected MoveAction MoveAction;
         protected SpinAction SpinAction;
+        protected ShootAction ShootAction;
         protected BaseAction[] BaseActionsArray;
         protected HealthSystem HealthSystem;
         [SerializeField] protected int actionPoints;
@@ -30,6 +33,7 @@ namespace GamePlay.Unit.BaseUnit
             HealthSystem = GetComponent<HealthSystem>();
             MoveAction = GetComponent<MoveAction>();
             SpinAction = GetComponent<SpinAction>();
+            ShootAction = GetComponent<ShootAction>();
             BaseActionsArray = GetComponents<BaseAction>();
             DefaultActionPoints = actionPoints;
         }
@@ -47,7 +51,7 @@ namespace GamePlay.Unit.BaseUnit
         {
             LevelGrid.Instance.RemoveUnitAtGridPosition(GridPosition, this);
             Destroy(gameObject);
-            
+
             OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
         }
 
@@ -90,9 +94,22 @@ namespace GamePlay.Unit.BaseUnit
             return false;
         }
 
+        public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
+        {
+            if (baseAction.GetActionPointsCost() <= actionPoints)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         // Common properties and methods
         public MoveAction GetMoveAction() => MoveAction;
-        
+        public float GetHealthNormalized() => HealthSystem.GetHealthNormalized();
+
         public int GetActionPoints() => actionPoints;
         public GridPosition GetGridPosition() => GridPosition;
         public BaseAction[] GetBaseActionArray() => BaseActionsArray;
@@ -101,9 +118,7 @@ namespace GamePlay.Unit.BaseUnit
         public bool IsEnemy() => isEnemy;
         public void Damage(int damageAmount) => HealthSystem.TakeDamage(damageAmount);
 
-        public SpinAction GetSpinAction()
-        {
-            return SpinAction;
-        }
+        public SpinAction GetSpinAction() => SpinAction;
+        public ShootAction GetShootAction() => ShootAction;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GamePlay.Enemy.EnemyAI;
 using GamePlay.GridSystem;
 using GridSystem;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace GamePlay.ActionSystem.MoveAction
     public class MoveAction : BaseAction.BaseAction
     {
         [SerializeField] private int maxMoveDistance = 4;
-        
+
         private const string ActionName = "Move";
         private Vector3 _targetPosition;
         private float _stoppingDistance;
@@ -72,6 +73,16 @@ namespace GamePlay.ActionSystem.MoveAction
             return 1;
         }
 
+        public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+        {
+            int targetCountAtGridPosition = Unit.GetShootAction().GetTargetCountAtPosition(gridPosition);
+            return new EnemyAIAction
+            {
+                gridPosition = gridPosition,
+                actionValue = targetCountAtGridPosition * 10,
+            };
+        }
+
         public override List<GridPosition> GetValidActionGridPositionList()
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();
@@ -107,7 +118,5 @@ namespace GamePlay.ActionSystem.MoveAction
 
             return validActionGridPositions;
         }
-
-
     }
 }
