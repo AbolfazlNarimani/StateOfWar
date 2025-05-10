@@ -1,15 +1,14 @@
 using System;
-using Unit;
 using UnityEngine;
 
 namespace GamePlay.Unit
 {
     public class UnitSelectedVisual : MonoBehaviour
     {
-        [SerializeField] private GamePlay.Unit.Unit unit;
+        [SerializeField] private GamePlay.Unit.BaseUnit.BaseUnit unit;
         private MeshRenderer _meshRenderer;
         private UnitActionSystem _unitActionSystem;
-        private GamePlay.Unit.Unit _currentUnit;
+        private GamePlay.Unit.BaseUnit.BaseUnit _currentUnit;
 
         private void Awake()
         {

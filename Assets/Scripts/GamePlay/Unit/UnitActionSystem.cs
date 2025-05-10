@@ -1,16 +1,17 @@
 using System;
-using System.ComponentModel.Design.Serialization;
+using System.Linq;
+using GamePlay.ActionSystem.BaseAction;
 using GamePlay.GridSystem;
-using GamePlay.NewInputSystem.ActionSystem.BaseAction;
+using GamePlay.NewInputSystem;
 using GridSystem;
 using NewInputSystem;
 using UnityEngine;
 
-namespace Unit
+namespace GamePlay.Unit
 {
     public class UnitActionSystem : MonoBehaviour
     {
-        [SerializeField] private GamePlay.Unit.Unit selectedUnit;
+        [SerializeField] private GamePlay.Unit.BaseUnit.BaseUnit selectedUnit;
         [SerializeField] private LayerMask unitLayerMask;
         private GameInput _gameInput;
         private BaseAction _selectedAction;
@@ -24,14 +25,43 @@ namespace Unit
         public static UnitActionSystem Instance { get; private set; }
 
         private bool _isBusy;
-
+        
+        
         private void Start()
         {
             Instance = this;
             _gameInput = GameInput.Instance;
+           
+            
+            // Clear any existing subscriptions first
+            _gameInput.OnMoveAction -= OnMoveAction; 
+            _gameInput.OnUnitSelect -= OnUnitSelected;
+            // Re-subscribe
             _gameInput.OnMoveAction += OnMoveAction;
             _gameInput.OnUnitSelect += OnUnitSelected;
-            SetSelectedUnit(selectedUnit);
+
+            
+            // Initialize with null first
+            selectedUnit = null;
+            _selectedAction = null;
+            _isBusy = false;
+    
+            // Find first player unit if none is assigned
+            if (selectedUnit == null)
+            {
+                var playerUnits = FindObjectsOfType<BaseUnit.BaseUnit>()
+                    .Where(unit => !unit.IsEnemy())
+                    .ToList();
+            
+                if (playerUnits.Count > 0)
+                {
+                    SetSelectedUnit(playerUnits[0]);
+                }
+            }
+            else if (!selectedUnit.IsEnemy()) // Only auto-select if it's a player unit
+            {
+                SetSelectedUnit(selectedUnit);
+            }
         }
 
 
@@ -43,15 +73,19 @@ namespace Unit
         private void OnMoveAction(object sender, EventArgs e)
         {
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMouseWorldPosition());
-
+            
             if (_isBusy) return;
+            if (selectedUnit == null) return; // Add null check
+            if (!TurnSystem.TurnSystem.Instance.IsPlayerTurn()) return;
+            if (_selectedAction == null) return; // Add null check
+            
             if (!_selectedAction.IsValidActionGridPosition(mouseGridPosition)) return;
             if (!selectedUnit.TrySpendActionPointsToTakeAction(_selectedAction)) return;
-            if (!TurnSystem.TurnSystem.Instance.IsPlayerTurn()) return;
-
+            
             SetBusy();
             _selectedAction.TakeAction(mouseGridPosition, ClearBusy);
             OnActionStarted?.Invoke(this, EventArgs.Empty);
+            
         }
 
         private void HandleUnitSelection()
@@ -61,14 +95,14 @@ namespace Unit
             if (Physics.Raycast(ray, out RaycastHit hit, maxDistance: float.MaxValue, unitLayerMask))
             {
                 // selectedUnit = hit.collider.GetComponent<Unit>();
-                if (hit.transform.TryGetComponent<GamePlay.Unit.Unit>(out GamePlay.Unit.Unit unit) && selectedUnit != unit && !unit.IsEnemy())
+                if (hit.transform.TryGetComponent<GamePlay.Unit.BaseUnit.BaseUnit>(out GamePlay.Unit.BaseUnit.BaseUnit unit) && selectedUnit != unit && !unit.IsEnemy())
                 {
                     SetSelectedUnit(unit);
                 }
             }
         }
 
-        private void SetSelectedUnit(GamePlay.Unit.Unit unit)
+        private void SetSelectedUnit(GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             selectedUnit = unit;
 
@@ -89,7 +123,7 @@ namespace Unit
             OnBusyChanged?.Invoke(this, false);
         }
 
-        public GamePlay.Unit.Unit GetSelectedUnit()
+        public GamePlay.Unit.BaseUnit.BaseUnit GetSelectedUnit()
         {
             return selectedUnit;
         }
@@ -101,5 +135,8 @@ namespace Unit
         }
 
         public BaseAction GetSelectedAction() => _selectedAction;
+        
     }
+    
+    
 }

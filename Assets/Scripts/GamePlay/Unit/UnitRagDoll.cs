@@ -10,7 +10,7 @@ namespace GamePlay.Unit
         {
             MatchAllChildTransforms(originalRagDollRootBone, ragDollRootBone);
             //optional
-           // ApplyExplosionToRagdoll(ragDollRootBone, 300f,transform.position,10f);
+             ApplyExplosionToRagdoll(ragDollRootBone, .5f, 1f);
         }
 
         private void MatchAllChildTransforms(Transform root, Transform clone)
@@ -24,20 +24,26 @@ namespace GamePlay.Unit
                     cloneChild.rotation = child.rotation;
 
                     MatchAllChildTransforms(child, cloneChild);
+                   
                 }
             }
         }
 
-        private void ApplyExplosionToRagdoll(Transform root, float explosionForce, Vector3 explosionPosition,float explosionRange)
+        private void ApplyExplosionToRagdoll(Transform root, float explosionForce,float explosionRange)
         {
-            foreach (Transform child in root)
+            void OnTriggerEnter(Collider other)
             {
-                if (child.TryGetComponent(out Rigidbody childRagdollBody))
+                foreach (Transform child in root)
                 {
-                    childRagdollBody.AddExplosionForce(explosionForce, explosionPosition, explosionRange);
+                    if (child.TryGetComponent(out Rigidbody childRagdollBody))
+                    {
+                        childRagdollBody.AddExplosionForce(explosionForce, other.transform.position, explosionRange);
+                    }
+                    ApplyExplosionToRagdoll(child, explosionForce, explosionRange);
                 }
-                ApplyExplosionToRagdoll(child,explosionForce, explosionPosition, explosionRange);
             }
+
+            
         }
     }
 }

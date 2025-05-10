@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using GridSystem;
 using UnityEngine;
+using System;
+
 
 namespace GamePlay.GridSystem
 {
@@ -10,6 +12,9 @@ namespace GamePlay.GridSystem
         [SerializeField] Transform debugObjectPrefab;
         private GamePlay.GridSystem.GridSystem _gridSystem;
 
+        public event EventHandler OnAnyUnitMovedGridPosition;
+        public event EventHandler OnAnyUnitDied;
+
         private void Awake()
         {
             Instance = this;
@@ -17,28 +22,30 @@ namespace GamePlay.GridSystem
             _gridSystem.CreateDebugObjects(debugObjectPrefab);
         }
 
-        public void AddUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.Unit unit)
+        public void AddUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             gridObject.AddUnit(unit);
         }
 
-        public List<GamePlay.Unit.Unit> GetUnitListAtGridPosition(GridPosition gridPosition)
+        public List<GamePlay.Unit.BaseUnit.BaseUnit> GetUnitListAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.GetUnitList();
         }
 
-        public void RemoveUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.Unit unit)
+        public void RemoveUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
+            OnAnyUnitDied?.Invoke(this, EventArgs.Empty);
             gridObject.RemoveUnit(unit);
         }
 
-        public void UnitMovedGridPosition(GamePlay.Unit.Unit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
+        public void UnitMovedGridPosition(GamePlay.Unit.BaseUnit.BaseUnit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
         {
             RemoveUnitAtGridPosition(fromGridPosition, unit);
             AddUnitAtGridPosition(toGridPosition, unit);
+            OnAnyUnitMovedGridPosition?.Invoke(this, EventArgs.Empty);
         }
 
         public GridPosition GetGridPosition(Vector3 worldPosition) => _gridSystem.GetGridPosition(worldPosition);
@@ -54,7 +61,7 @@ namespace GamePlay.GridSystem
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.ContainsUnit();
         }
-        public GamePlay.Unit.Unit GetUnitAtGridPosition(GridPosition gridPosition)
+        public GamePlay.Unit.BaseUnit.BaseUnit GetUnitAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.GetUnit();

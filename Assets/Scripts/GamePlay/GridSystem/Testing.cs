@@ -5,7 +5,7 @@ namespace GamePlay.GridSystem
 {
     public class Testing : MonoBehaviour
     {
-        [FormerlySerializedAs("_unit")] [SerializeField] private GamePlay.Unit.Unit unit;
+        [FormerlySerializedAs("_unit")] [SerializeField] private Unit.InfantryUnit.Unit unit;
         private void Update()
         {
 

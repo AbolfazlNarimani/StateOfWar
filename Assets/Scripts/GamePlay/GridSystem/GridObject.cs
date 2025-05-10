@@ -6,14 +6,14 @@ namespace GamePlay.GridSystem
     public class GridObject
     {
         private GridPosition _gridPosition;
-        private List<GamePlay.Unit.Unit> _unitList;
+        private List<GamePlay.Unit.BaseUnit.BaseUnit> _unitList;
         private GamePlay.GridSystem.GridSystem _gridSystem;
 
         public GridObject(GamePlay.GridSystem.GridSystem gridSystem, GridPosition gridPosition)
         {
             this._gridSystem = gridSystem;
             this._gridPosition = gridPosition;
-            _unitList = new List<GamePlay.Unit.Unit>();
+            _unitList = new List<GamePlay.Unit.BaseUnit.BaseUnit>();
         }
 
         public override string ToString()
@@ -26,17 +26,17 @@ namespace GamePlay.GridSystem
             return _gridPosition.ToString() + "\n" + unitString;
         }
 
-        public void AddUnit(GamePlay.Unit.Unit unit)
+        public void AddUnit(GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             _unitList.Add(unit);
         }
 
-        public List<GamePlay.Unit.Unit> GetUnitList()
+        public List<GamePlay.Unit.BaseUnit.BaseUnit> GetUnitList()
         {
             return _unitList;
         }
 
-        public void RemoveUnit(GamePlay.Unit.Unit unit)
+        public void RemoveUnit(GamePlay.Unit.BaseUnit.BaseUnit unit)
         {
             _unitList.Remove(unit);
         }
@@ -46,7 +46,7 @@ namespace GamePlay.GridSystem
             return _unitList.Count > 0;
         }
 
-        public GamePlay.Unit.Unit GetUnit()
+        public GamePlay.Unit.BaseUnit.BaseUnit GetUnit()
         {
             if (ContainsUnit())
             {
