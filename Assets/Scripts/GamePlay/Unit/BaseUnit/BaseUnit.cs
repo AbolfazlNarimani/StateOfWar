@@ -14,9 +14,6 @@ namespace GamePlay.Unit.BaseUnit
     public abstract class BaseUnit : MonoBehaviour
     {
         protected GridPosition GridPosition;
-        protected MoveAction MoveAction;
-        protected SpinAction SpinAction;
-        protected ShootAction ShootAction;
         protected BaseAction[] BaseActionsArray;
         protected HealthSystem HealthSystem;
         [SerializeField] protected int actionPoints;
@@ -31,9 +28,6 @@ namespace GamePlay.Unit.BaseUnit
         protected virtual void Awake()
         {
             HealthSystem = GetComponent<HealthSystem>();
-            MoveAction = GetComponent<MoveAction>();
-            SpinAction = GetComponent<SpinAction>();
-            ShootAction = GetComponent<ShootAction>();
             BaseActionsArray = GetComponents<BaseAction>();
             DefaultActionPoints = actionPoints;
         }
@@ -106,8 +100,20 @@ namespace GamePlay.Unit.BaseUnit
             }
         }
 
+        public T GetAction<T>() where T : BaseAction
+        {
+            foreach (BaseAction baseAction in BaseActionsArray)
+            {
+                if (baseAction is T)
+                {
+                    return (T)baseAction;
+                }
+            }
+
+            return null;
+        }
+
         // Common properties and methods
-        public MoveAction GetMoveAction() => MoveAction;
         public float GetHealthNormalized() => HealthSystem.GetHealthNormalized();
 
         public int GetActionPoints() => actionPoints;
@@ -117,8 +123,5 @@ namespace GamePlay.Unit.BaseUnit
         public Vector3 GetWorldPosition() => transform.position;
         public bool IsEnemy() => isEnemy;
         public void Damage(int damageAmount) => HealthSystem.TakeDamage(damageAmount);
-
-        public SpinAction GetSpinAction() => SpinAction;
-        public ShootAction GetShootAction() => ShootAction;
     }
 }

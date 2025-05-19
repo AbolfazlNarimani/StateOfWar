@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using GamePlay.ActionSystem.BaseAction;
+using GamePlay.ActionSystem.MoveAction;
 using GamePlay.GridSystem;
 using GamePlay.NewInputSystem;
 using GridSystem;
@@ -106,7 +107,7 @@ namespace GamePlay.Unit
         {
             selectedUnit = unit;
 
-            SetSelectedAction(unit.GetMoveAction());
+            SetSelectedAction(unit.GetAction<MoveAction>());
 
             OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
         }

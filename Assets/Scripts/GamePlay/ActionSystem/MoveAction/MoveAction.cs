@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GamePlay.ActionSystem.BaseShootAction.ShootAction;
 using GamePlay.Enemy.EnemyAI;
 using GamePlay.GridSystem;
 using GridSystem;
@@ -75,7 +76,7 @@ namespace GamePlay.ActionSystem.MoveAction
 
         public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
         {
-            int targetCountAtGridPosition = Unit.GetShootAction().GetTargetCountAtPosition(gridPosition);
+            int targetCountAtGridPosition = Unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
             return new EnemyAIAction
             {
                 gridPosition = gridPosition,
