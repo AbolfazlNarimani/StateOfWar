@@ -1,0 +1,24 @@
+using System;
+using GamePlay.GridSystem;
+using GridSystem;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace GamePlay.PathFinding
+{
+    public class PathFinding : MonoBehaviour
+    {
+        [SerializeField] private Transform gridDebugObjectPrefab;
+        private int width;
+        private int height;
+        private float cellSize;
+        private GridSystem<PathNode> gridSystem;
+
+        private void Awake()
+        {
+            gridSystem = new GridSystem<PathNode>(10, 10, 2f,
+                (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
+            gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+        }
+    }
+}
