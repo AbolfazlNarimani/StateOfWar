@@ -1,27 +1,30 @@
+using System;
 using GridSystem;
+using Unity.VisualScripting;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GamePlay.GridSystem
 {
-    public class GridSystem
+    public class GridSystem<TGridObject>
     {
         private int _width;
         private int _height;
         private float _cellSize;
-        private GridObject[,] _gridObjectArray;
+        private TGridObject[,] _gridObjectArray;
 
-        public GridSystem(int width, int height, float cellSize)
-        {
+        public GridSystem(int width, int height, float cellSize, Func<GridSystem<TGridObject> , GridPosition , TGridObject> createGridObject)
+        { 
             this._width = width;
             this._height = height;
             this._cellSize = cellSize;
-            _gridObjectArray = new GridObject[width, height];
+            _gridObjectArray = new TGridObject[width, height];
             for (int x = 0; x < width; x++)
             {
                 for (int z = 0; z < height; z++)
                 {
                     GridPosition gridPosition = new GridPosition(x, z);
-                    _gridObjectArray[x, z] = new GridObject(this, gridPosition);
+                    _gridObjectArray[x, z] = createGridObject(this, gridPosition);
                 }
             }
         }
@@ -46,12 +49,12 @@ namespace GamePlay.GridSystem
                     GridPosition gridPosition = new GridPosition(x, z);
                     Transform debugTransform = Object.Instantiate(debugPrefab, GetWorldPosition(gridPosition), Quaternion.identity);
                     GridDebugObject gridDebugObject = debugTransform.GetComponent<GridDebugObject>();
-                    gridDebugObject.SetGridObject( GetGridObject(gridPosition));
+                    gridDebugObject.SetGridObject(GetGridObject(gridPosition));
                 }
             }
         }
 
-        public GridObject GetGridObject(GridPosition gridPosition)
+        public TGridObject GetGridObject(GridPosition gridPosition)
         {
             return _gridObjectArray[gridPosition.x, gridPosition.z];
         }

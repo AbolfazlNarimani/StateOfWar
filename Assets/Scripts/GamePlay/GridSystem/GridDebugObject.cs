@@ -5,15 +5,15 @@ namespace GamePlay.GridSystem
 {
     public class GridDebugObject : MonoBehaviour
     {
-        private GridObject _gridObject;
+        private object _gridObject;
         [SerializeField] private TextMeshPro textMeshPro;
 
-        public void SetGridObject(GridObject gridObject)
+        public virtual void SetGridObject(object gridObject)
         {
             this._gridObject = gridObject;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             textMeshPro.text = this._gridObject.ToString();
         }

@@ -10,7 +10,7 @@ namespace GamePlay.GridSystem
     {
         public static LevelGrid Instance;
         [SerializeField] Transform debugObjectPrefab;
-        private GamePlay.GridSystem.GridSystem _gridSystem;
+        private GridSystem<GridObject> _gridSystem;
 
         public event EventHandler OnAnyUnitMovedGridPosition;
         public event EventHandler OnAnyUnitDied;
@@ -18,8 +18,8 @@ namespace GamePlay.GridSystem
         private void Awake()
         {
             Instance = this;
-            _gridSystem = new GamePlay.GridSystem.GridSystem(10, 10, 2f);
-            _gridSystem.CreateDebugObjects(debugObjectPrefab);
+            _gridSystem = new GamePlay.GridSystem.GridSystem<GridObject>(10, 10, 2f, (GridSystem<GridObject> g , GridPosition gridPosition) => new GridObject(g, gridPosition));
+            //_gridSystem.CreateDebugObjects(debugObjectPrefab);
         }
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
