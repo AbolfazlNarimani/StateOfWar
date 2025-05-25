@@ -12,14 +12,24 @@ namespace GamePlay.GridSystem
         [SerializeField] Transform debugObjectPrefab;
         private GridSystem<GridObject> _gridSystem;
 
+        [SerializeField] private int width;
+        [SerializeField] private int height;
+        [SerializeField] private float cellSize;
+
         public event EventHandler OnAnyUnitMovedGridPosition;
         public event EventHandler OnAnyUnitDied;
 
         private void Awake()
         {
             Instance = this;
-            _gridSystem = new GamePlay.GridSystem.GridSystem<GridObject>(10, 10, 2f, (GridSystem<GridObject> g , GridPosition gridPosition) => new GridObject(g, gridPosition));
+            _gridSystem = new GamePlay.GridSystem.GridSystem<GridObject>(width, height, cellSize,
+                (GridSystem<GridObject> g, GridPosition gridPosition) => new GridObject(g, gridPosition));
             //_gridSystem.CreateDebugObjects(debugObjectPrefab);
+        }
+
+        private void Start()
+        {
+            PathFinding.PathFinding.Instance.SetUp(width, height, cellSize);
         }
 
         public void AddUnitAtGridPosition(GridPosition gridPosition, GamePlay.Unit.BaseUnit.BaseUnit unit)
@@ -41,7 +51,8 @@ namespace GamePlay.GridSystem
             gridObject.RemoveUnit(unit);
         }
 
-        public void UnitMovedGridPosition(GamePlay.Unit.BaseUnit.BaseUnit unit, GridPosition fromGridPosition, GridPosition toGridPosition)
+        public void UnitMovedGridPosition(GamePlay.Unit.BaseUnit.BaseUnit unit, GridPosition fromGridPosition,
+            GridPosition toGridPosition)
         {
             RemoveUnitAtGridPosition(fromGridPosition, unit);
             AddUnitAtGridPosition(toGridPosition, unit);
@@ -61,11 +72,11 @@ namespace GamePlay.GridSystem
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.ContainsUnit();
         }
+
         public GamePlay.Unit.BaseUnit.BaseUnit GetUnitAtGridPosition(GridPosition gridPosition)
         {
             GridObject gridObject = _gridSystem.GetGridObject(gridPosition);
             return gridObject.GetUnit();
         }
-        
     }
 }
