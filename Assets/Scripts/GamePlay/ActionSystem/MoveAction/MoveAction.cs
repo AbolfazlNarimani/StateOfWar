@@ -13,18 +13,13 @@ namespace GamePlay.ActionSystem.MoveAction
         [SerializeField] private int maxMoveDistance = 4;
 
         private const string ActionName = "Move";
-        private Vector3 _targetPosition;
+        private List<Vector3> _positionList;
+        private int currentPositionIndex;
         private float _stoppingDistance;
         [SerializeField] private Sprite actionIcon;
         public event EventHandler OnStartMoving;
         public event EventHandler OnStopMoving;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            _targetPosition = transform.position;
-        }
-
+        
         public override string GetActionName()
         {
             return ActionName;
@@ -43,18 +38,25 @@ namespace GamePlay.ActionSystem.MoveAction
             {
                 return;
             }
+            
+            Vector3 targetPosition = _positionList[currentPositionIndex];
 
             float moveSpeed = 4f;
             _stoppingDistance = .1f;
-            Vector3 moveDirection = (_targetPosition - transform.position).normalized;
-            if (Vector3.Distance(transform.position, _targetPosition) > _stoppingDistance)
+            Vector3 moveDirection = (targetPosition - transform.position).normalized;
+            if (Vector3.Distance(transform.position, targetPosition) > _stoppingDistance)
             {
                 transform.position += moveDirection * (moveSpeed * Time.deltaTime);
             }
             else
             {
-                OnStopMoving?.Invoke(this, EventArgs.Empty);
-                ActionComplete();
+                currentPositionIndex++;
+                if (currentPositionIndex >= _positionList.Count)
+                { 
+                    OnStopMoving?.Invoke(this, EventArgs.Empty);
+                    ActionComplete();
+                }
+               
             }
 
             float rotateSpeed = 10f;
@@ -64,8 +66,15 @@ namespace GamePlay.ActionSystem.MoveAction
         // old moveUnit function
         public override void TakeAction(GridPosition targetPosition, Action onActionComplete)
         {
+            List<GridPosition> pathGridPositionList = PathFinding.PathFinding.Instance.FindPath(Unit.GetGridPosition(), targetPosition, out int pathLength);
+            
+            currentPositionIndex = 0;
             OnStartMoving?.Invoke(this, EventArgs.Empty);
-            _targetPosition = LevelGrid.Instance.GetWorldPosition(targetPosition);
+            _positionList = new List<Vector3>();
+            foreach (GridPosition pathGridPosition in pathGridPositionList)
+            {
+                _positionList.Add(LevelGrid.Instance.GetWorldPosition(pathGridPosition));
+            }
             ActionStart(onActionComplete);
         }
 
@@ -110,6 +119,25 @@ namespace GamePlay.ActionSystem.MoveAction
                     if (LevelGrid.Instance.HasAnyUnitAtGridPosition(testGridPosition))
                     {
                         //grid position is occupied with another unit
+                        continue;
+                    }
+
+                    if (!PathFinding.PathFinding.Instance.IsWalkableGridPosition(testGridPosition))
+                    {
+                        //position is not walkable
+                        continue;
+                    }
+
+                    if (!PathFinding.PathFinding.Instance.HasPath(unitGridPosition, testGridPosition))
+                    {
+                        // has no path to it
+                        continue;
+                    }
+
+                    int pathfindingDistanceMultiplier = 10;
+                    if (PathFinding.PathFinding.Instance.GetPathLength(unitGridPosition,testGridPosition) > maxMoveDistance * pathfindingDistanceMultiplier)
+                    {
+                        //path is to long
                         continue;
                     }
 

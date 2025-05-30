@@ -49,7 +49,7 @@ namespace GamePlay.PathFinding
             }
         }
 
-        public List<GridPosition> FindPath(GridPosition startPosition, GridPosition endPosition)
+        public List<GridPosition> FindPath(GridPosition startPosition, GridPosition endPosition, out int pathLength)
         {
             List<PathNode> openList = new List<PathNode>();
             List<PathNode> closeList = new List<PathNode>();
@@ -78,6 +78,7 @@ namespace GamePlay.PathFinding
                 if (currentNode == endNode)
                 {
                     // final node
+                    pathLength = endNode.GetHCost();
                     return CalculatePath(endNode);
                 }
 
@@ -114,6 +115,7 @@ namespace GamePlay.PathFinding
             }
 
             // No path found
+            pathLength = 0;
             return null;
         }
 
@@ -225,5 +227,14 @@ namespace GamePlay.PathFinding
 
             return neighborList;
         }
+        public bool IsWalkableGridPosition(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition).IsWalkable();
+        public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition) =>  FindPath(startGridPosition, endGridPosition,out int pathLength) != null;
+
+        public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+        {
+            FindPath(startGridPosition, endGridPosition, out int pathLength);
+            return pathLength;
+        }
+        
     }
 }

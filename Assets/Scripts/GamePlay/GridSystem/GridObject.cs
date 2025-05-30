@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GamePlay.Unit.BaseUnit;
 using GridSystem;
 
 namespace GamePlay.GridSystem
@@ -9,11 +10,11 @@ namespace GamePlay.GridSystem
         private List<GamePlay.Unit.BaseUnit.BaseUnit> _unitList;
         private GamePlay.GridSystem.GridSystem<GridObject> _gridSystem;
 
-        public GridObject(GamePlay.GridSystem.GridSystem<GridObject> gridSystem, GridPosition gridPosition)
+        public GridObject(GridSystem<GridObject> gridSystem, GridPosition gridPosition)
         {
-            this._gridSystem = gridSystem;
-            this._gridPosition = gridPosition;
-            _unitList = new List<GamePlay.Unit.BaseUnit.BaseUnit>();
+            _gridSystem = gridSystem;
+            _gridPosition = gridPosition;
+            _unitList = new List<BaseUnit>();
         }
 
         public override string ToString()

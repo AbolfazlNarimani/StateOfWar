@@ -15,6 +15,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
         [SerializeField] protected int damageAmount = 50;
         [SerializeField] protected int actionPointCost = 1;
         [SerializeField] private Sprite shootSprite;
+        [SerializeField] private LayerMask obstaclesLayerMask;
 
         // Rest of your existing ShootAction implementation...
 
@@ -114,10 +115,11 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             GridPosition unitGridPosition = Unit.GetGridPosition();
             return GetValidActionGridPositionList(unitGridPosition);
         }
+
         public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
         {
             List<GridPosition> validActionGridPositions = new List<GridPosition>();
-           
+
 
             // Create a square area around the unit
             for (int x = -maxShootDistance; x <= maxShootDistance; x++)
@@ -139,6 +141,16 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
                     // Skip if no unit at position
                     if (!LevelGrid.Instance.HasAnyUnitAtGridPosition(testGridPosition))
                         continue;
+
+                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                    Vector3 shootDir = _targetUnit.GetWorldPosition() - unitWorldPosition.normalized;
+                    float unitShoulderHeight = 1.7f;
+                    if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, Vector3.Distance(unitWorldPosition, _targetUnit.GetWorldPosition()),obstaclesLayerMask))
+                    {
+                        // we are blocked
+                        continue;
+                    }
+
 
                     BaseUnit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
@@ -165,7 +177,6 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 
         public override void TakeAction(GridPosition gridPosition, Action OnActionComplete)
         {
-            
             _targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
             _canShootBullet = true;
 
@@ -177,10 +188,11 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
         }
 
         public override int GetActionPointsCost() => actionPointCost;
+
         public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
         {
             BaseUnit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
-            
+
             targetUnit.GetHealthNormalized();
             return new EnemyAIAction
             {
@@ -211,13 +223,13 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
             });
             _targetUnit.Damage(damageAmount);
         }
-        
+
         public BaseUnit GetTargetUnit()
         {
             return _targetUnit;
         }
 
-        public int  GetMaxShootDistance()
+        public int GetMaxShootDistance()
         {
             return maxShootDistance;
         }
