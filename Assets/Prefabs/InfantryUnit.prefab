@@ -519,6 +519,9 @@ MonoBehaviour:
   damageAmount: 50
   actionPointCost: 1
   shootSprite: {fileID: 21300022, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
+  obstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &745354696697021008
 MonoBehaviour:
   m_ObjectHideFlags: 0

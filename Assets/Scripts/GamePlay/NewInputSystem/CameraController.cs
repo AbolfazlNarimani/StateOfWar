@@ -1,9 +1,7 @@
-using GamePlay.NewInputSystem;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace NewInputSystem
+namespace GamePlay.NewInputSystem
 {
     public class CameraController : MonoBehaviour
     {
@@ -104,8 +102,8 @@ namespace NewInputSystem
 
             // Interpolate Z offset based on zoom level
             
-            float zOffset = Mathf.Lerp(minZOffset, maxZOffset, (_currentZoom - MinZoom) / (MaxZoom - MinZoom));
-            defaultZRotation = zOffset;
+           // float zOffset = Mathf.Lerp(minZOffset, maxZOffset, (_currentZoom - MinZoom) / (MaxZoom - MinZoom));
+            defaultZRotation = 35;
         }
     }
 }
