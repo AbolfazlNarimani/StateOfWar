@@ -22,6 +22,7 @@ namespace GamePlay.ActionSystem.SniperShootAction
             maxShootDistance = sniperRange;
             damageAmount = sniperDamage;
             actionPointCost = sniperActionCost;
+            SetActionNameForChildActions("Snipe");
         }
     
         public override List<GridPosition> GetValidActionGridPositionList()

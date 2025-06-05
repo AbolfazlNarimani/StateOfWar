@@ -33,5 +33,12 @@ namespace Ui.ActionButtonUI
             BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
             selectedGameObject.SetActive(selectedAction == _baseAction);
         }
+
+        public void SetCustomIconSize(Vector2 customSize)
+        {
+            RectTransform rectTransform = image.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = customSize; 
+
+        }
     }
 }

@@ -109,6 +109,7 @@ PrefabInstance:
       objectReference: {fileID: 6041485410288215710}
     m_RemovedComponents:
     - {fileID: 6211982948141645751, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
+    - {fileID: 3202324585712492934, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2147504533627423524, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
     - {fileID: 5913932382841426422, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
@@ -123,6 +124,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3555788696555512905, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6041485410288215710}
+    - targetCorrespondingSourceObject: {fileID: 3555788696555512905, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6424551088402868963}
   m_SourcePrefab: {fileID: 100100000, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}
 --- !u!1 &4453182422877127453 stripped
 GameObject:
@@ -144,6 +148,29 @@ MonoBehaviour:
   actionPoints: 2
   isEnemy: 0
   shootRange: 15
+--- !u!114 &6424551088402868963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4453182422877127453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c632ff68ba1a90d6992572b6af7e56d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxShootDistance: 7
+  damageAmount: 50
+  actionPointCost: 1
+  shootSprite: {fileID: 21300034, guid: 5acb27b603af6d44ea6113c4b7b15385, type: 3}
+  obstaclesLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  sniperRange: 20
+  sniperDamage: 100
+  sniperActionCost: 1
+  requiresLineOfSight: 1
 --- !u!4 &5288683991815884927 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5039947149763917611, guid: d7c4d329d761cea02a91f86fde8f32a0, type: 3}

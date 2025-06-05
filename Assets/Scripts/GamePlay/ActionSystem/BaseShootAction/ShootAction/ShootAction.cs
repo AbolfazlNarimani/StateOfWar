@@ -29,7 +29,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
         private State _state;
         private float _stateTimer;
         private bool _canShootBullet;
-        private const string ActionName = "Shoot";
+        private  string _actionName = "Shoot";
 
         private void Update()
         {
@@ -118,7 +118,12 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 
         public override string GetActionName()
         {
-            return ActionName;
+            return _actionName;
+        }
+
+        public void SetActionNameForChildActions(string altActionName)
+        {
+            _actionName = altActionName;
         }
 
         public override Sprite GetActionIcon()
@@ -157,6 +162,7 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 
         private BaseUnit _targetUnit; // Changed from GamePlay.Unit.BaseUnit.BaseUnit
 
+        public static event EventHandler OnAnyShoot;
         public event EventHandler<OnShootEventArgs> OnUnitShoot;
 
         public class OnShootEventArgs : EventArgs
@@ -172,6 +178,9 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
                 TargetUnit = _targetUnit,
                 ShootingUnit = Unit // Now properly references the BaseUnit
             });
+            
+            OnAnyShoot?.Invoke(this, EventArgs.Empty);
+            
             _targetUnit.Damage(damageAmount);
         }
 
@@ -236,54 +245,54 @@ namespace GamePlay.ActionSystem.BaseShootAction.ShootAction
 
             return validActionGridPositions;
         }
-        
-            /*public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
+
+        /*public List<GridPosition> GetValidActionGridPositionList(GridPosition unitGridPosition)
+    {
+        List<GridPosition> validActionGridPositions = new List<GridPosition>();
+
+
+        // Create a square area around the unit
+        for (int x = -maxShootDistance; x <= maxShootDistance; x++)
         {
-            List<GridPosition> validActionGridPositions = new List<GridPosition>();
-
-
-            // Create a square area around the unit
-            for (int x = -maxShootDistance; x <= maxShootDistance; x++)
+            for (int z = -maxShootDistance; z <= maxShootDistance; z++)
             {
-                for (int z = -maxShootDistance; z <= maxShootDistance; z++)
+                GridPosition offsetGridPosition = new GridPosition(x, z);
+                GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+
+                // Skip invalid grid positions
+                if (!LevelGrid.Instance.IsGridPositionValid(testGridPosition))
+                    continue;
+
+                // Calculate actual distance (Manhattan distance)
+                int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
+                if (testDistance > maxShootDistance)
+                    continue;
+
+                // Skip if no unit at position
+                if (!LevelGrid.Instance.HasAnyUnitAtGridPosition(testGridPosition))
+                    continue;
+
+                Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
+                Vector3 shootDir = _targetUnit.GetWorldPosition() - unitWorldPosition.normalized;
+                float unitShoulderHeight = 1.7f;
+                if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, Vector3.Distance(unitWorldPosition, _targetUnit.GetWorldPosition()),obstaclesLayerMask))
                 {
-                    GridPosition offsetGridPosition = new GridPosition(x, z);
-                    GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
-
-                    // Skip invalid grid positions
-                    if (!LevelGrid.Instance.IsGridPositionValid(testGridPosition))
-                        continue;
-
-                    // Calculate actual distance (Manhattan distance)
-                    int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
-                    if (testDistance > maxShootDistance)
-                        continue;
-
-                    // Skip if no unit at position
-                    if (!LevelGrid.Instance.HasAnyUnitAtGridPosition(testGridPosition))
-                        continue;
-
-                    Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
-                    Vector3 shootDir = _targetUnit.GetWorldPosition() - unitWorldPosition.normalized;
-                    float unitShoulderHeight = 1.7f;
-                    if (Physics.Raycast(unitWorldPosition + Vector3.up * unitShoulderHeight, shootDir, Vector3.Distance(unitWorldPosition, _targetUnit.GetWorldPosition()),obstaclesLayerMask))
-                    {
-                        // we are blocked
-                        continue;
-                    }
+                    // we are blocked
+                    continue;
+                }
 
 
-                    BaseUnit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
+                BaseUnit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
-                    // CRITICAL FIX: Changed == to != for enemy check
-                    if (targetUnit.IsEnemy() != Unit.IsEnemy())
-                    {
-                        validActionGridPositions.Add(testGridPosition);
-                    }
+                // CRITICAL FIX: Changed == to != for enemy check
+                if (targetUnit.IsEnemy() != Unit.IsEnemy())
+                {
+                    validActionGridPositions.Add(testGridPosition);
                 }
             }
+        }
 
-            return validActionGridPositions;
-        }*/
+        return validActionGridPositions;
+    }*/
     }
 }

@@ -387,6 +387,7 @@ GameObject:
   - component: {fileID: 8936607570496945855}
   - component: {fileID: 3202324585712492934}
   - component: {fileID: 745354696697021008}
+  - component: {fileID: 3684824686353378553}
   m_Layer: 7
   m_Name: InfantryUnit
   m_TagString: Untagged
@@ -535,7 +536,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMoveDistance: 4
-  actionIcon: {fileID: -1299279679, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  actionIcon: {fileID: 1386808307, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+--- !u!114 &3684824686353378553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3555788696555512905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2d08791d49c33d1a3952325b25ad6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grenadeActionIcon: {fileID: 21300020, guid: 2f84b5c8ce2b18549a175522847db7d6, type: 3}
+  customSpriteSize: {x: 0, y: 0}
 --- !u!1 &4237380906938565847
 GameObject:
   m_ObjectHideFlags: 0
@@ -908,6 +923,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 55186b09b4a188d87a6712e6f2c5f699, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 3fd19349d452c2698a4cceddd77c2989, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'mixamorig:RightForeArm'\n\tTransform 'mixamorig:RightHand'\n\tTransform
+        'mixamorig:RightHandIndex1'\n\tTransform 'mixamorig:LeftForeArm'\n\tFrom
+        animation clip 'Rifle Run'"
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 3fd19349d452c2698a4cceddd77c2989, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0

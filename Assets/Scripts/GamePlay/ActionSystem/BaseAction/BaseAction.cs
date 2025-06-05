@@ -60,6 +60,11 @@ namespace GamePlay.ActionSystem.BaseAction
             return 0;
         }
 
+        public virtual void SetSpriteSize(Vector2 customSize)
+        {
+            
+        }
+
         public BaseUnit GetUnit()
         {
             return Unit;

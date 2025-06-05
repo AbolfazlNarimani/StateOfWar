@@ -51,7 +51,6 @@ namespace GamePlay.Unit
             if (unit.IsEnemy())
             {
                 enemyUnitList.Add(unit);
-                Debug.Log(unit);
             }
             else
             {
